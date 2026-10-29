@@ -33,8 +33,8 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 ## Design rules
 
 - Board is the design. The prototype has no other layouts.
-- Flat colour. Chilli `#E23B2E` (text-safe `#D22A1D`) means closed and nothing else. Pandan `#1F8A5B` (`#1C7E53`) is open and the primary action. Kaya `#F6C343` is closing soon and "Go here". Slate `#6A6F78` is unknown. Cream `#FFF4E0` ground, ink `#1E1B18` text. Teh, peranakan and sakura are accents only.
-- Plus Jakarta Sans for everything you read, including the uncle's line. Bungee only for the verdict word ("CLOSED LAH") and the wordmark. Ma Shan Zheng only for Chinese. Noto Sans Tamil for Tamil. No handwriting face: it was hard to read for older eyes.
+- White and simple. White page, ink `#16181D` text, grey `#5B6068` secondary text, hairlines `#E4E5E9`, soft fills `#F3F4F6` for search, chips and secondary buttons. Colour only where it means something: chilli `#D22A1D` closed, pandan `#1C7E53` open and the main action, kaya `#F6C343` closing soon and "Go here" (amber `#8F5600` when it is text on white), slate `#6A6F78` not sure. The one solid block on a screen is the verdict card; the "Go here" sign inside it is white. Teh, peranakan and sakura survive only inside the illustrations.
+- One family for everything you read: Plus Jakarta Sans, including the verdict word and the uncle's line. Ma Shan Zheng only for Chinese, Noto Sans Tamil for Tamil. The wordmark is an SVG. No Bungee, no handwriting face.
 - Built for older users first: 17px body, nothing under 15px on the dark rows, tap targets 48px or more, centre names wrap instead of being cut off, every button says what it does in words, and nothing floats over the content.
 - The verdict carries all four official languages, English largest. The strings live in `PLACARD_TEXT` and need a native speaker before launch.
 - The cast rotates per centre: a Chinese uncle, a Malay makcik, an Indian uncle and a younger auntie. No government logos, and nothing implies halal status.
