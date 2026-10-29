@@ -202,6 +202,38 @@ a{color:var(--pandan-press)}
 .bsub{display:block;margin-top:2px;font:500 12px/1.3 var(--ui);color:#A39E98}
 .bwhen{font:700 14px/1.2 var(--ui);font-variant-numeric:tabular-nums;white-space:nowrap;color:#6EE0A8}
 .s-closed .bwhen{color:#FF8A7F}.s-soon .bwhen{color:var(--kaya)}.s-unknown .bwhen{color:#C3C7CD}
+.bgrp{margin-top:16px}
+.bgrp:first-child{margin-top:4px}
+.bgrp + .board{margin-top:6px}
+
+/* board sheet: the verdict again, then when Uncle shuts on a five-week calendar. The photo drops to the bottom, plain. */
+#sh-hero,#sh-rem{display:flex;flex-direction:column;gap:12px}
+.verdict.sv{margin-top:0;display:flex;flex-direction:column;gap:4px}
+.verdict.sv .vbig{margin-top:2px}
+.vlangs{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;font-size:15px;opacity:.95}
+.vlangs .ms{font:700 1em/1.3 var(--ui)}.vlangs .zh{font:400 1.15em/1.2 var(--brush)}.vlangs .ta{font:600 .95em/1.4 var(--tamil)}
+.vsay{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.3)}
+.v-soon .vsay{border-top-color:rgba(30,27,24,.2)}
+.vsay .vline{margin:0;flex:1;min-width:0}
+.sched{display:flex;flex-direction:column;gap:8px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:10px;border-radius:14px;background:var(--paper)}
+.cal-h{padding-bottom:2px;text-align:center;font:700 11px/1 var(--ui);color:var(--ink-2)}
+.cal-d{position:relative;display:grid;place-items:center;height:40px;border-radius:8px;font:600 14px/1 var(--ui);font-variant-numeric:tabular-nums}
+.cal-d b{position:absolute;top:3px;left:0;right:0;text-align:center;font:800 9px/1 var(--ui);letter-spacing:.04em;text-transform:uppercase}
+.cal-d.m{padding-top:9px}
+.cal-d.past{color:rgba(30,27,24,.35)}
+.cal-d.shut{background:var(--chilli-aa);color:var(--paper)}
+.cal-d.shut.past{opacity:.45}
+.cal-d.now{outline:2px solid var(--ink);outline-offset:1px}
+.cal-key{display:flex;align-items:center;gap:14px;margin:0;font:600 12px/1.3 var(--ui);color:var(--ink-2)}
+.cal-key span{display:inline-flex;align-items:center;gap:6px}
+.cal-key i{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--chilli-aa)}
+.cal-key i.now{background:none;outline:2px solid var(--ink);outline-offset:-2px}
+.board .bline{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:56px;padding:9px 14px}
+.sched .bhint{margin:0}
+.shot{margin:0;display:flex;flex-direction:column;gap:6px}
+.shot img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;background:var(--cream-3)}
+.shot figcaption{font:600 12px/1.3 var(--ui);color:var(--ink-2)}
 
 /* layout D: stall row. Lit signboards over roller shutters: up when open, half down when closing soon, down when shut. */
 .stalls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 10px;padding:8px 0 10px}
@@ -525,6 +557,46 @@ const UI = (() => {
 <button class="tile-hit" data-id="${c.id}" aria-label="Your chope, ${label(c, km)}"><span class="vl">${icon('tissueOn', 'i20')}Your chope</span><span class="vbig">${BIG[kind(c)]}</span><span class="vnm">${esc(short(c.name))}</span><span class="vsub">${esc(placardParts(c).sub)}${km !== undefined ? ' · ' + dist(km) : ''}</span><span class="vline">“${esc(c.line)}”</span></button>
 ${c.alt && kind(c) !== 'open' ? goSign({ label: kind(c) === 'soon' ? 'Or go here' : 'Go here instead', name: short(c.alt.name), meta: `Open today · ${c.alt.km} km away`, attr: `data-go="${c.alt.id}" data-from="${c.id}"` }) : ''}</div>`;
 
+  const sheetVerdict = c => {
+    const p = placardParts(c), k = castFor(c.id);
+    return `<div class="verdict sv v-${p.k}"><span class="vl">${icon(p.k, 'i20')}Today</span><span class="vbig">${BIG[p.k]}</span><span class="vsub">${esc(p.sub)}</span>
+<span class="vlangs"><span class="ms" lang="ms">${p.t.ms}</span><span class="zh" lang="zh">${p.t.zh}</span><span class="ta" lang="ta">${p.t.ta}</span></span>
+<span class="vsay">${avatar(k)}<span class="vline">“${esc(c.line)}”</span></span></div>`;
+  };
+
+  const ymd = t => t.toISOString().slice(0, 10);
+  const addDays = (s, n) => { const [y, m, d] = s.split('-').map(Number); return ymd(new Date(Date.UTC(y, m - 1, d + n))); };
+  const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+  const span = n => n <= 14 ? `${n} day${n === 1 ? '' : 's'}` : n < 63 ? `${Math.round(n / 7)} weeks` : n < 730 ? `${Math.round(n / 30.4)} months` : `${Math.round(n / 365)} years`;
+  const SHUT = { cleaning: 'Cleaning', works: 'Renovation' };
+  // Five weeks from this Monday. Only drawn when a closure lands in part of them; otherwise one line says when the next one is.
+  function schedule(c, today) {
+    const from = addDays(today, -((new Date(today).getUTCDay() + 6) % 7)), to = addDays(from, 34);
+    const shutOn = d => c.shut.some(s => s.start <= d && d <= s.end);
+    const inView = c.shut.some(s => s.start <= to && s.end >= from);
+    // A calendar that is all red says less than the one row under it.
+    const allShut = c.shut.some(s => s.start <= from && s.end >= to);
+    const cal = !inView || allShut ? '' : `<div class="cal" aria-hidden="true">${'MTWTFSS'.split('').map(d => `<span class="cal-h">${d}</span>`).join('')}${Array.from({ length: 35 }, (_, i) => {
+      const d = addDays(from, i), [, m, n] = d.split('-').map(Number);
+      const cls = ['cal-d', shutOn(d) && 'shut', d < today && 'past', d === today && 'now', (i === 0 || n === 1) && 'm'].filter(Boolean).join(' ');
+      return `<span class="${cls}">${i === 0 || n === 1 ? `<b>${MON[m - 1]}</b>` : ''}${n}</span>`;
+    }).join('')}</div><p class="cal-key"><span><i></i>Shut</span><span><i class="now"></i>Today</span></p>`;
+    const rows = c.shut.map(s => {
+      const now = s.start <= today, back = addDays(s.end, 1);
+      const sub = now ? `Since ${fmt(s.start)} · back ${fmt(back)}` : `${fmt(s.start)} to ${fmt(s.end)}`;
+      const right = now ? `${span(daysBetween(today, back))} more` : span(daysBetween(s.start, s.end) + 1);
+      return `<li class="brow s-closed"><span class="bline"><span class="bdot"></span><span><span class="bn"><span>${SHUT[s.kind]}</span></span><span class="bsub">${esc(sub)}</span></span><span class="bwhen">${esc(right)}</span></span></li>`;
+    }).join('');
+    // A quarter already inside a long closure has nothing to confirm.
+    const y = today.slice(0, 4), q = Math.ceil(+today.slice(5, 7) / 3);
+    const qSpan = n => [`${y}-${String(n * 3 - 2).padStart(2, '0')}-01`, `${y}-${['03-31', '06-30', '09-30', '12-31'][n - 1]}`];
+    const tbc = c.tbc.filter(n => n >= q && !c.shut.some(s => s.start <= qSpan(n)[0] && s.end >= qSpan(n)[1]));
+    const tbcLine = tbc.length ? `<p class="bhint">Cleaning dates for ${tbc.map(n => 'Q' + n).join(' and ')} ${y} not out yet. Call before you go.</p>` : '';
+    const none = c.shut.length ? (inView ? '' : `<p class="bhint">Nothing shut in the next five weeks.</p>`) : `<p class="bhint">No closure listed after today.</p>`;
+    return `<section class="sched"><h3 class="sec">When Uncle shuts</h3>${cal}${none}${rows ? `<ol class="board">${rows}</ol>` : ''}${tbcLine}</section>`;
+  }
+  const shot = c => `<figure class="shot"><img src="photos/${c.id}.jpg" alt="Photo of ${esc(c.name)}" loading="lazy" decoding="async"><figcaption>Photo: NEA</figcaption></figure>`;
+
   const quiet = c => {
     const r = c.remarks[0];
     const head = `${icon('info', 'i20')}<span class="qt">${stallsLine(c)}${r && r.length <= 34 ? ' · ' + esc(r) : ''}</span>`;
@@ -612,7 +684,7 @@ ${c.alt && kind(c) !== 'open' ? goSign({ label: kind(c) === 'soon' ? 'Or go here
   const spotFig = (state, extra = '') => `<figure class="spot-fig">${spot(state)}<figcaption>${SPOTS[state].caption}</figcaption>${extra}</figure>`;
   const note = (line, k) => `<div class="note"><p>${esc(line)}</p><div class="sig">${CAST[k].name} ${avatar(k)}</div></div>`;
 
-  return { icon, pill, placardParts, tile, deckCard, shelfItem, stall, boardRow, verdict, note, quiet, goSign, hero, fmt, esc, short, kind, WORD, dist, FOOD, foodSVG, castFor, SPOTS, spot, spotFig };
+  return { icon, pill, placardParts, tile, deckCard, shelfItem, stall, boardRow, verdict, sheetVerdict, schedule, shot, note, quiet, goSign, hero, fmt, esc, short, kind, WORD, dist, FOOD, foodSVG, castFor, SPOTS, spot, spotFig };
 })();
 
 (() => {
@@ -798,7 +870,10 @@ function renderWall() {
   else if (!S.aFilter) rows.sort((a, b) => (S.chope.has(b.id) - S.chope.has(a.id)) || RANK[a.status.kind] - RANK[b.status.kind] || a.name.localeCompare(b.name));
   $('wallhead').innerHTML = `<button class="xbtn" data-home aria-label="Back to today">${icon('back', 'i20')}</button><h2>${S.aStatus ? `${rows.length} ${WORDF[S.aStatus].toLowerCase()}` : S.aFilter ? `${rows.length} matches` : `All ${rows.length} centres`}</h2>`;
   $('wallchip').innerHTML = S.aStatus ? `<button class="showing" data-unfilter aria-label="Clear filter: ${WORDF[S.aStatus]}">Showing: ${WORDF[S.aStatus]}<span class="x">${icon('close')}</span></button>` : '';
-  $('wall').innerHTML = view(rows, near) || UI.spotFig('good');
+  // 123 board rows read as one wall of text, so the plain "See all" splits them under a header per status.
+  const grouped = S.layout === 'board' && !near && !S.aFilter && !S.aStatus;
+  const groups = [['chope', 'Your chope', rows.filter(c => S.chope.has(c.id))], ...SHELVES.map(([k, t]) => [k, t, rows.filter(c => kind(c) === k && !S.chope.has(c.id))])];
+  $('wall').innerHTML = (grouped ? groups.filter(g => g[2].length).map(([k, t, r]) => `<h3 class="shelf-h bgrp"><span class="tag tag-${k}"></span>${esc(t)}<span class="n">${r.length}</span></h3>${view(r)}`).join('') : view(rows, near)) || UI.spotFig('good');
 }
 function renderBody() { if (S.aView === 'wall') renderWall(); else renderHomeBody(); fitPlacards(); }
 function setAView(v) {
@@ -891,11 +966,14 @@ function openSheet(c, quiet) {
   const addr = c.remarks.includes(c.address) ? '' : c.address;
   $('sh-addr').textContent = [addr, S.here ? `${dist(km(S.here, c))} from you` : ''].filter(Boolean).join(' · ');
   $('sh-addr').hidden = !$('sh-addr').textContent;
-  $('sh-hero').innerHTML = UI.hero(c);
-  $('sh-note').innerHTML = UI.note(c.line, UI.castFor(c.id));
   const ac = c.alt && byId(c.alt.id);
-  $('sh-alt').innerHTML = ac ? UI.goSign({ label: k === 'soon' ? 'Or go here' : 'Go here instead', name: short(ac.name), meta: `Open today · ${c.alt.km} km away`, attr: 'id="goalt"' }) : '';
-  $('sh-rem').innerHTML = UI.quiet(c);
+  const go = ac ? UI.goSign({ label: k === 'soon' ? 'Or go here' : 'Go here instead', name: short(ac.name), meta: `Open today · ${c.alt.km} km away`, attr: 'id="goalt"' }) : '';
+  // Board answers first and keeps the photo for last; the tile layouts lead with the stamped polaroid.
+  const board = S.layout === 'board';
+  $('sh-hero').innerHTML = board ? UI.sheetVerdict(c) + go : UI.hero(c);
+  $('sh-note').innerHTML = board ? UI.schedule(c, S.date) : UI.note(c.line, UI.castFor(c.id));
+  $('sh-alt').innerHTML = board ? '' : go;
+  $('sh-rem').innerHTML = UI.quiet(c) + (board ? UI.shot(c) : '');
   const ch = $('sh-chope'), on = S.chope.has(c.id);
   ch.setAttribute('aria-pressed', on); ch.setAttribute('aria-label', on ? 'Choped. Tap to unchope' : 'Chope this centre'); ch.innerHTML = icon(on ? 'tissueOn' : 'tissue', 'i20');
   if (!quiet) { $('sh-copy').hidden = true; }

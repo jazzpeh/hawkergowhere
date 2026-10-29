@@ -26,7 +26,7 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 ## Where things are
 
 - `prototype/page.html` is the whole prototype: tokens, components, placard text, cast, spinner and state. `build.py` inlines the data and logo.
-- `prototype/make-data.ts` runs the real domain code (`scripts/parse.ts`, `src/domain/*`) over the fixture for 20 Oct and 7 Dec.
+- `prototype/make-data.ts` runs the real domain code (`scripts/parse.ts`, `src/domain/*`) over the fixture for 20 Oct and 7 Dec. Each centre also carries `shut` (its dated closures that end today or later) and `tbc` (quarters whose cleaning dates are not out yet) for the Board sheet.
 - `brand/` holds the four logo concepts. Peekaboo Shutter is the pick; Half-Shut reads best at 16px.
 - `decisions.tsv` is the decision log, one row per call.
 
@@ -38,7 +38,8 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 - The cast rotates per centre: a Chinese uncle, a Malay makcik, an Indian uncle and a younger auntie. No government logos, and nothing implies halal status.
 - Home answers without scrolling: uncle headline with tappable counts, "Find makan near me", search, at most six tiles, "See all". "Eat where ah?" is the floating button.
 - Layouts share one data path: `view(rows, near)` in `page.html` draws any list of centres as the board, wall, deck, shelves or stalls, so search, near me, chope, "See all" and "Go here" behave the same in all five.
-  - Board (default): your first chope answered in one big verdict with its "Go here instead", then one dark row per centre with a status dot, the reason and the date that matters ("Back 9 Dec", "Shuts 26 Oct"). Eight rows on home, no photos.
+  - Board (default): your first chope answered in one big verdict with its "Go here instead", then one dark row per centre with a status dot, the reason and the date that matters ("Back 9 Dec", "Shuts 26 Oct"). Eight rows on home, no photos. "See all" groups the rows under Your chope, Shut today, Closing soon, Not sure and Open today.
+    - Board's detail sheet repeats the verdict with the three other languages on one line and the uncle's line inside it, then "Go here instead", then "When Uncle shuts": a five-week calendar from this Monday with shut days in chilli, drawn only when a closure lands in part of those weeks, and one dark row per remaining closure. The photo sits last, plain and in full colour. The tile layouts keep the polaroid sheet.
   - Wall: taped polaroids, at most six on home.
   - Deck: one big card with the uncle's line, swipe, arrow keys or Next to move; up to 12 on home.
   - Shelves: one sideways rail per status on a teh plank; every shut and closing centre on home, 12 for near me.

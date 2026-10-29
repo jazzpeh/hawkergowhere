@@ -12,8 +12,12 @@ for (const day of ['2026-10-20', '2026-12-07'] as IsoDate[]) {
     const status = statusOn(c, day)
     const alt = status.kind === 'open' ? undefined : nearestOpen(centres, c, day, c.id)
     const remarks = c.closures.flatMap(x => ('remarks' in x && x.remarks ? [x.remarks] : []))
+    // The rest of the schedule from today, for the Board sheet's calendar.
+    const shut = c.closures.flatMap(x => (x.kind !== 'tbc' && x.end >= day ? [{ kind: x.kind, start: x.start, end: x.end }] : []))
+      .sort((a, b) => a.start.localeCompare(b.start))
+    const tbc = c.closures.flatMap(x => (x.kind === 'tbc' ? [x.quarter] : []))
     return { id: c.id, name: c.name, address: c.address, lat: c.lat, lng: c.lng, foodStalls: c.foodStalls, description: c.description,
-      status, line: uncleSays(status, c, () => 0), remarks,
+      status, line: uncleSays(status, c, () => 0), remarks, shut, tbc,
       alt: alt && { id: alt.centre.id, name: alt.centre.name, km: Math.round(alt.km * 10) / 10 } }
   })
 }
