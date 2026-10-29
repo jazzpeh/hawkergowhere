@@ -48,8 +48,9 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 
 ## Open items
 
-- Owner: pick a home layout. Board is the recommendation and the default; Wall, Deck, Shelves and Stalls stay behind the Layout switch in the demo bar, and `#layout=wall` etc. opens one directly. If Board wins, the photo licence stops blocking launch, since photos then only appear on the detail sheet.
+- Owner picked Board on 2026-10-29. Wall, Deck, Shelves and Stalls stay behind the Layout switch until Board is built in `src/`; then they go. Photos now only appear at the bottom of the detail sheet, so the photo licence no longer blocks launch.
 - Owner: approve the design and the logo.
+- Owner: pick a way to show stalls (see the 2026-10-29 `stalls` rows in `decisions.tsv`). No open dataset lists stalls inside hawker centres.
 - Native speaker check of the Malay, Chinese and Tamil placard strings.
 - Confirm the photo licence, or hotlink `nea.gov.sg` (it sends `cross-origin-resource-policy: cross-origin`) with an NEA credit.
 - Create a local `.env` with `DATA_GOV_SG_API_KEY` to verify the `x-api-key` header name.
