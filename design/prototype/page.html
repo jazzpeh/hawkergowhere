@@ -1,7 +1,7 @@
 <title>Uncle Says Closed</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Ma+Shan+Zheng&family=Noto+Sans+Tamil:wght@600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Ma+Shan+Zheng&family=Noto+Sans+Tamil:wght@400;600;700&display=swap">
 <style>
 :root{
   --ink:#16181D; --ink-2:#5B6068; --line:#E4E5E9; --scrim:rgba(22,24,29,.5);
@@ -16,6 +16,9 @@
   --tamil:'Noto Sans Tamil','Tamil Sangam MN','Latha',sans-serif;
   --col:440px;
 }
+/* Plus Jakarta Sans has no Chinese or Tamil glyphs, so each language falls back to a face that does. */
+html[lang^="zh"]{--ui:'Plus Jakarta Sans','PingFang SC','Hiragino Sans GB','Noto Sans SC','Microsoft YaHei',system-ui,sans-serif}
+html[lang^="ta"]{--ui:'Plus Jakarta Sans','Noto Sans Tamil','Tamil Sangam MN','Latha',system-ui,sans-serif}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.45 var(--ui);overflow-x:hidden;-webkit-text-size-adjust:100%}
 button,input,textarea{font:inherit;color:inherit}
@@ -29,8 +32,13 @@ a{color:var(--pandan-press)}
 /* page column */
 .app{max-width:var(--col);margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:12px 32px}
 .top{display:flex;align-items:center;gap:8px;min-height:44px}
-.lockup{display:block;height:38px;width:auto;max-width:62vw}
-.today{margin-left:auto;font:600 16px/1.3 var(--ui);color:var(--ink-2);white-space:nowrap}
+.lockup{display:flex;align-items:center;gap:8px;min-width:0}
+.lockup svg{display:block;flex:none;width:34px;height:34px}
+.wm{font:800 20px/1 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:-.02em;white-space:nowrap}
+.wm b{font-weight:800;color:var(--chilli-aa)}
+.langbtn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 14px 0 12px;border:0;border-radius:999px;background:var(--soft);font:700 16px/1 var(--ui);white-space:nowrap}
+.langbtn .i{color:var(--ink-2)}
+.today{margin:10px 0 -8px;font:600 16px/1.3 var(--ui);color:var(--ink-2)}
 .ahead{display:flex;flex-direction:column;gap:10px}
 .abody{display:flex;flex-direction:column;gap:8px;padding-top:14px}
 .headline{margin:8px 0 2px;font:800 24px/1.25 var(--ui);letter-spacing:-.01em;text-wrap:pretty}
@@ -39,14 +47,14 @@ a{color:var(--pandan-press)}
 .sec .i{color:var(--peranakan)}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;font:700 16px/1.3 var(--ui);white-space:nowrap}
-.btn-primary{width:100%;height:56px;font-size:18px;padding:0 16px;background:var(--pandan-aa);color:var(--paper)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;font:700 16px/1.3 var(--ui);text-align:center}
+.btn-primary{width:100%;min-height:56px;font-size:18px;padding:0 16px;background:var(--pandan-aa);color:var(--paper)}
 .btn-primary:active{background:var(--pandan-press)}
 .btn-primary[disabled]{opacity:.8;cursor:progress}
-.btn-soft{height:48px;padding:0 16px;background:var(--soft);color:var(--ink);font-size:16px}
+.btn-soft{min-height:48px;padding:6px 16px;background:var(--soft);color:var(--ink);font-size:16px}
 .btn-soft:active{background:var(--soft-2)}
 .btn-text{height:48px;padding:0 8px;background:none;color:var(--pandan-press);font-size:16px}
-.eat{width:100%;height:56px;margin-top:8px}
+.eat{width:100%;min-height:56px;margin-top:8px}
 .see-all{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0;border:0;background:none;font:700 17px/1.3 var(--ui);color:var(--pandan-press);align-self:flex-start}
 .nearon{display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 4px 4px 12px;border-radius:12px;background:var(--soft);font:600 16px/1.4 var(--ui)}
 .nearon > .i{color:var(--pandan-aa)}
@@ -177,7 +185,7 @@ div.quiet,.quiet summary{display:flex;align-items:center;gap:8px;min-height:44px
 .sh-head h2{margin:0;font:800 22px/1.3 var(--ui);text-wrap:balance}
 .sh-head p{margin:4px 0 0;font:400 16px/1.4 var(--ui);color:var(--ink-2)}
 .sh-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:-4px}
-.sh-acts .btn{width:100%;height:52px}
+.sh-acts .btn{width:100%;min-height:52px}
 .sh-acts .btn[aria-pressed=true]{background:var(--pandan-aa);color:var(--paper)}
 .xbtn{flex:none;width:44px;height:44px;border:0;border-radius:999px;background:var(--soft);color:var(--ink);display:grid;place-items:center}
 .xbtn:active{background:var(--soft-2)}
@@ -237,6 +245,19 @@ div.quiet,.quiet summary{display:flex;align-items:center;gap:8px;min-height:44px
 
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);z-index:4000;background:var(--ink);color:var(--paper);padding:14px 18px;border-radius:12px;font:700 16px/1.4 var(--ui);width:max-content;max-width:calc(100vw - 32px)}
 .toast[hidden]{display:none}
+
+/* language chooser: shown on first open, and from the language button */
+.langs{position:fixed;inset:0;z-index:5000;overflow:auto;background:var(--bg);display:flex;justify-content:center}
+.langs[hidden]{display:none}
+.langs-in{width:100%;max-width:var(--col);padding:max(40px, env(safe-area-inset-top, 0px)) 16px 32px;display:flex;flex-direction:column;gap:12px}
+.langs-in > svg{width:64px;height:64px;margin-bottom:4px}
+.langs-h{margin:0 0 12px;display:flex;flex-direction:column;gap:4px}
+.langs-h span{font:700 18px/1.35 'Plus Jakarta Sans','PingFang SC','Noto Sans SC','Noto Sans Tamil',sans-serif;color:var(--ink-2)}
+.langs-h span:first-child{font-size:26px;font-weight:800;color:var(--ink)}
+.lang-opt{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:68px;padding:0 20px;border:2px solid var(--line);border-radius:16px;background:var(--paper);font:800 22px/1.2 'Plus Jakarta Sans','PingFang SC','Noto Sans SC','Noto Sans Tamil',sans-serif;color:var(--ink);text-align:left}
+.lang-opt[aria-current=true]{border-color:var(--pandan-aa);background:#EEF7F2}
+.lang-opt .i{color:var(--pandan-aa)}
+.lang-opt:not([aria-current=true]) .i{visibility:hidden}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 @media (prefers-reduced-motion:reduce){
@@ -274,7 +295,7 @@ div.quiet,.quiet summary{display:flex;align-items:center;gap:8px;min-height:44px
     <div class="handle"></div>
     <div class="sh-head"><div class="tx"><h2 id="sh-name"></h2><p id="sh-addr"></p></div><button class="xbtn" data-close aria-label="Close" id="sh-x"></button></div>
     <div class="sh-acts"><button class="btn btn-soft" id="sh-chope" aria-pressed="false"></button><button class="btn btn-soft" id="sh-share"></button></div>
-    <label class="copybox" id="sh-copy" hidden>Copy this and send to your kakis<textarea readonly rows="3"></textarea></label>
+    <label class="copybox" id="sh-copy" hidden><span id="sh-copy-l"></span><textarea readonly rows="3"></textarea></label>
     <div id="sh-hero"></div>
     <div id="sh-note"></div>
     <div id="sh-rem"></div>
@@ -300,9 +321,18 @@ div.quiet,.quiet summary{display:flex;align-items:center;gap:8px;min-height:44px
   </div>
 </div>
 <div class="toast" id="toast" hidden role="status"></div>
+<div class="langs" id="langs" hidden role="dialog" aria-modal="true" aria-labelledby="langs-h">
+  <div class="langs-in"><!--@MARK@-->
+    <h2 class="langs-h" id="langs-h"><span>Choose your language</span><span lang="zh">选择语言</span><span lang="ms">Pilih bahasa</span><span lang="ta">மொழியைத் தேர்ந்தெடுக்கவும்</span></h2>
+    <div id="lang-list" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
+</div>
 
 <script>
 /*@DATA@*/
+</script>
+<script>
+/*@I18N@*/
 </script>
 <script>
 const UI = (() => {
@@ -314,6 +344,7 @@ const UI = (() => {
   const disc = '<circle cx="12" cy="12" r="10"/>';
   const TISSUE = 'M9.4 13.5C8.3 10.6 8.2 7.4 9.3 4.4c1 .9 1.9 1.3 2.8 1.2.9-.1 1.8-.8 2.6-1.9 1.2 3.2 1.1 6.6-.1 9.8z';
   const ICONS = {
+    globe: () => `<circle cx="12" cy="12" r="9" ${LINE}/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" ${LINE}/>`,
     pin: () => '<path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.6a2.6 2.6 0 1 1 0-5.2 2.6 2.6 0 0 1 0 5.2z"/>',
     plane: () => '<path d="M21.5 3.2c-.9-.9-2.3-.8-3.2.1l-3.6 3.6-9.4-2.7-2 2 7.7 4.4-3.4 3.4-2.9-.5-1.5 1.5 3.6 1.9 1.9 3.6 1.5-1.5-.5-2.9 3.4-3.4 4.4 7.7 2-2-2.7-9.4 3.6-3.6c.9-.9 1-2.3.1-3.2z"/>',
     search: () => `<circle cx="10.5" cy="10.5" r="6.25" ${LINE}/><path d="M15.2 15.2L20 20" ${LINE}/>`,
@@ -332,61 +363,60 @@ const UI = (() => {
   };
   const icon = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]()}</svg>`;
 
-  const MON = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
-  const DOW = 'Sun Mon Tue Wed Thu Fri Sat'.split(' ');
-  const fmt = ymd => { const [y, m, d] = ymd.split('-').map(Number); const t = new Date(Date.UTC(y, m - 1, d)); return `${DOW[t.getUTCDay()]} ${d} ${MON[m - 1]}${y !== 2026 ? ' ' + y : ''}`; };
+  const fmt = ymd => fmtDate(ymd);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const short = n => n.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+(Market and |Market & |Market\/)?(Cooked )?(Food Centre|Hawker Centre)\s*$/i, '').trim() || n;
   const KIND = { open: 'open', 'closing-soon': 'soon', closed: 'closed', unknown: 'unknown' };
-  const WORD = { open: 'Open', soon: 'Closing soon', closed: 'Closed', unknown: 'Not sure' };
+  const WORD = new Proxy({}, { get: (_, k) => t('word')[k] });
   const kind = c => KIND[c.status.kind];
   const marketStalls = c => { const m = /(\d+)\s+market stalls/i.exec(c.description || ''); return m ? +m[1] : 0; };
   const dist = d => d < 1 ? `${Math.max(50, Math.round(d * 20) * 50)} m` : `${d.toFixed(1)} km`;
 
-  // Unverified translations. A native speaker must review every ms / zh / ta string before launch.
-  // `short` is the one-line tile version: the shortest natural word per language.
+  // The verdict in all four languages, shown under the chosen one. Unverified: a native speaker must review ms / zh / ta before launch.
   const PLACARD_TEXT = {
-    closed:  { en: 'Closed today', ms: 'Tutup hari ini', zh: '今日休息', ta: 'இன்று விடுமுறை', short: ['Tutup', '休息', 'விடுமுறை'] },
-    works:   { en: 'Renovation', ms: 'Ubah suai', zh: '装修', ta: 'புதுப்பிப்பு பணி', short: ['Ubah suai', '装修', 'பணி'] },
-    soon:    { en: 'Closing', ms: 'Akan tutup', zh: '即将休息', ta: 'விரைவில் மூடப்படும்', short: ['Akan tutup', '即将休息', 'விரைவில்'] },
-    unknown: { en: 'Call first', ms: 'Telefon dahulu', zh: '请先致电', ta: 'முதலில் அழைக்கவும்', short: ['Telefon', '致电', 'அழைக்கவும்'] },
-    open:    { en: 'Open today', ms: 'Buka hari ini', zh: '今日营业', ta: 'இன்று திறந்திருக்கும்', short: ['Buka', '营业', 'திறந்திருக்கும்'] },
+    closed:  { en: 'Closed today', ms: 'Tutup hari ini', zh: '今日休息', ta: 'இன்று விடுமுறை' },
+    works:   { en: 'Renovation', ms: 'Ubah suai', zh: '装修', ta: 'புதுப்பிப்பு பணி' },
+    soon:    { en: 'Closing', ms: 'Akan tutup', zh: '即将休息', ta: 'விரைவில் மூடப்படும்' },
+    unknown: { en: 'Call first', ms: 'Telefon dahulu', zh: '请先致电', ta: 'முதலில் அழைக்கவும்' },
+    open:    { en: 'Open today', ms: 'Buka hari ini', zh: '今日营业', ta: 'இன்று திறந்திருக்கும்' },
   };
   function placardParts(c) {
     const s = c.status, k = kind(c);
-    if (k === 'closed') return { k, t: PLACARD_TEXT[s.closure.kind === 'works' ? 'works' : 'closed'], sub: `Back ${fmt(s.reopensOn)}` };
-    if (k === 'soon') return { k, t: PLACARD_TEXT.soon, date: fmt(s.closure.start).replace(/^\w+ /, ''), sub: `Shut from ${fmt(s.closure.start)}` };
-    if (k === 'unknown') return { k, t: PLACARD_TEXT.unknown, sub: 'Not in the NEA list today' };
-    return { k, t: PLACARD_TEXT.open, sub: s.next ? `Next ${s.next.kind} ${fmt(s.next.start)}` : 'No closure listed' };
+    if (k === 'closed') return { k, t: PLACARD_TEXT[s.closure.kind === 'works' ? 'works' : 'closed'], sub: t('back', fmt(s.reopensOn)) };
+    if (k === 'soon') return { k, t: PLACARD_TEXT.soon, sub: t('shutFrom', fmt(s.closure.start)) };
+    if (k === 'unknown') return { k, t: PLACARD_TEXT.unknown, sub: t('notListed') };
+    return { k, t: PLACARD_TEXT.open, sub: s.next ? t('next', t('kindWord')[s.next.kind], fmt(s.next.start)) : t('noClosure') };
   }
 
-  const stallsLine = c => c.foodStalls ? `${c.foodStalls} food stalls${marketStalls(c) ? ' · wet market' : ''}` : 'Stall count not listed';
+  const stallsLine = c => c.foodStalls ? t('stalls', c.foodStalls, marketStalls(c) > 0) : t('stallsNA');
 
-  const label = (c, km, choped) => `${esc(short(c.name))}, ${WORD[kind(c)]}${km !== undefined ? ', ' + dist(km) : ''}${choped ? ', choped' : ''}`;
-  const day = ymd => fmt(ymd).replace(/^\w+ /, '');
-  const when = c => { const s = c.status; return { closed: () => `Back ${day(s.reopensOn)}`, soon: () => `Shuts ${day(s.closure.start)}`, unknown: () => 'Call first', open: () => 'Open' }[kind(c)](); };
-  const why = c => { const cl = c.status.closure; return cl ? (cl.kind === 'works' ? 'Renovation' : 'Cleaning') : stallsLine(c); };
+  const label = (c, km, choped) => `${esc(short(c.name))}, ${WORD[kind(c)]}${km !== undefined ? ', ' + dist(km) : ''}${choped ? ', ' + t('choped') : ''}`;
+  const day = ymd => fmtDate(ymd, false);
+  const when = c => { const s = c.status; return { closed: () => t('whenBack', day(s.reopensOn)), soon: () => t('whenShuts', day(s.closure.start)), unknown: () => t('callFirst'), open: () => t('open') }[kind(c)](); };
+  const why = c => { const cl = c.status.closure; return cl ? t('shut')[cl.kind] : stallsLine(c); };
   const boardRow = (c, { km, choped } = {}) => `<li class="brow s-${kind(c)}" data-tile="${c.id}">
 <button class="tile-hit" data-id="${c.id}" aria-label="${label(c, km, choped)}, ${esc(when(c))}">
 <span class="bdot"></span><span><span class="bn"><span>${esc(short(c.name))}</span>${choped ? icon('tissueOn') : ''}</span><span class="bsub">${esc(why(c))}${km !== undefined ? ' · ' + dist(km) : ''}</span></span><span class="bwhen">${esc(when(c))}</span>
 </button></li>`;
-  const BIG = { closed: 'Closed lah', soon: 'Shutting soon', unknown: 'Not sure leh', open: 'Open!' };
+  const BIG = new Proxy({}, { get: (_, k) => t('big')[k] });
+  // English keeps the domain's own line; the other languages build theirs from the same status.
+  const line = c => { const s = c.status, k = kind(c); return LANG === 'en' ? c.line : LINES[LANG][k](short(c.name), k === 'closed' ? fmt(s.reopensOn) : k === 'soon' ? fmt(s.closure.start) : ''); };
   const verdict = (c, { km } = {}) => `<div class="verdict v-${kind(c)}" data-tile="${c.id}">
-<button class="tile-hit" data-id="${c.id}" aria-label="Your chope, ${label(c, km)}"><span class="vl">${icon('tissueOn', 'i20')}Your chope</span><span class="vbig">${BIG[kind(c)]}</span><span class="vnm">${esc(short(c.name))}</span><span class="vsub">${esc(placardParts(c).sub)}${km !== undefined ? ' · ' + dist(km) : ''}</span><span class="vline">“${esc(c.line)}”</span></button>
-${c.alt && kind(c) !== 'open' ? goSign({ label: kind(c) === 'soon' ? 'Or go here' : 'Go here instead', name: short(c.alt.name), meta: `Open today · ${c.alt.km} km away`, attr: `data-go="${c.alt.id}" data-from="${c.id}"` }) : ''}</div>`;
+<button class="tile-hit" data-id="${c.id}" aria-label="${t('yourChope')}, ${label(c, km)}"><span class="vl">${icon('tissueOn', 'i20')}${t('yourChope')}</span><span class="vbig">${BIG[kind(c)]}</span><span class="vnm">${esc(short(c.name))}</span><span class="vsub">${esc(placardParts(c).sub)}${km !== undefined ? ' · ' + dist(km) : ''}</span><span class="vline">“${esc(line(c))}”</span></button>
+${c.alt && kind(c) !== 'open' ? goSign({ label: t(kind(c) === 'soon' ? 'orGo' : 'goInstead'), name: short(c.alt.name), meta: t('openKm', c.alt.km), attr: `data-go="${c.alt.id}" data-from="${c.id}"` }) : ''}</div>`;
 
   const sheetVerdict = c => {
     const p = placardParts(c), k = castFor(c.id);
-    return `<div class="verdict sv v-${p.k}"><span class="vl">${icon(p.k, 'i20')}Today</span><span class="vbig">${BIG[p.k]}</span><span class="vsub">${esc(p.sub)}</span>
-<span class="vlangs"><span class="ms" lang="ms">${p.t.ms}</span><span class="zh" lang="zh">${p.t.zh}</span><span class="ta" lang="ta">${p.t.ta}</span></span>
-<span class="vsay">${avatar(k)}<span class="vline">“${esc(c.line)}”</span></span></div>`;
+    const others = ['en', 'ms', 'zh', 'ta'].filter(l => l !== LANG).map(l => `<span class="${l}" lang="${l}">${p.t[l]}</span>`).join('');
+    return `<div class="verdict sv v-${p.k}"><span class="vl">${icon(p.k, 'i20')}${t('today')}</span><span class="vbig">${BIG[p.k]}</span><span class="vsub">${esc(p.sub)}</span>
+<span class="vlangs">${others}</span>
+<span class="vsay">${avatar(k)}<span class="vline">“${esc(line(c))}”</span></span></div>`;
   };
 
   const ymd = t => t.toISOString().slice(0, 10);
   const addDays = (s, n) => { const [y, m, d] = s.split('-').map(Number); return ymd(new Date(Date.UTC(y, m - 1, d + n))); };
   const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
-  const span = n => n <= 14 ? `${n} day${n === 1 ? '' : 's'}` : n < 63 ? `${Math.round(n / 7)} weeks` : n < 730 ? `${Math.round(n / 30.4)} months` : `${Math.round(n / 365)} years`;
-  const SHUT = { cleaning: 'Cleaning', works: 'Renovation' };
+  const span = n => n <= 14 ? t('span', n, 'd') : n < 63 ? t('span', Math.round(n / 7), 'w') : n < 730 ? t('span', Math.round(n / 30.4), 'm') : t('span', Math.round(n / 365), 'y');
   // Five weeks from this Monday. Only drawn when a closure lands in part of them; otherwise one line says when the next one is.
   function schedule(c, today) {
     const from = addDays(today, -((new Date(today).getUTCDay() + 6) % 7)), to = addDays(from, 34);
@@ -394,34 +424,34 @@ ${c.alt && kind(c) !== 'open' ? goSign({ label: kind(c) === 'soon' ? 'Or go here
     const inView = c.shut.some(s => s.start <= to && s.end >= from);
     // A calendar that is all red says less than the one row under it.
     const allShut = c.shut.some(s => s.start <= from && s.end >= to);
-    const cal = !inView || allShut ? '' : `<div class="cal" aria-hidden="true">${'MTWTFSS'.split('').map(d => `<span class="cal-h">${d}</span>`).join('')}${Array.from({ length: 35 }, (_, i) => {
+    const cal = !inView || allShut ? '' : `<div class="cal" aria-hidden="true">${[...t('dow')].map(d => `<span class="cal-h">${d}</span>`).join('')}${Array.from({ length: 35 }, (_, i) => {
       const d = addDays(from, i), [, m, n] = d.split('-').map(Number);
       const cls = ['cal-d', shutOn(d) && 'shut', d < today && 'past', d === today && 'now', (i === 0 || n === 1) && 'm'].filter(Boolean).join(' ');
-      return `<span class="${cls}">${i === 0 || n === 1 ? `<b>${MON[m - 1]}</b>` : ''}${n}</span>`;
-    }).join('')}</div><p class="cal-key"><span><i></i>Shut</span><span><i class="now"></i>Today</span></p>`;
+      return `<span class="${cls}">${i === 0 || n === 1 ? `<b>${monthShort(m)}</b>` : ''}${n}</span>`;
+    }).join('')}</div><p class="cal-key"><span><i></i>${t('shutKey')}</span><span><i class="now"></i>${t('today')}</span></p>`;
     const rows = c.shut.map(s => {
       const now = s.start <= today, back = addDays(s.end, 1);
-      const sub = now ? `Since ${fmt(s.start)} · back ${fmt(back)}` : `${fmt(s.start)} to ${fmt(s.end)}`;
-      const right = now ? `${span(daysBetween(today, back))} more` : span(daysBetween(s.start, s.end) + 1);
-      return `<li class="brow s-closed"><span class="bline"><span class="bdot"></span><span><span class="bn"><span>${SHUT[s.kind]}</span></span><span class="bsub">${esc(sub)}</span></span><span class="bwhen">${esc(right)}</span></span></li>`;
+      const sub = now ? t('since', fmt(s.start), fmt(back)) : t('range', fmt(s.start), fmt(s.end));
+      const right = now ? t('more', span(daysBetween(today, back))) : span(daysBetween(s.start, s.end) + 1);
+      return `<li class="brow s-closed"><span class="bline"><span class="bdot"></span><span><span class="bn"><span>${t('shut')[s.kind]}</span></span><span class="bsub">${esc(sub)}</span></span><span class="bwhen">${esc(right)}</span></span></li>`;
     }).join('');
     // A quarter already inside a long closure has nothing to confirm.
     const y = today.slice(0, 4), q = Math.ceil(+today.slice(5, 7) / 3);
     const qSpan = n => [`${y}-${String(n * 3 - 2).padStart(2, '0')}-01`, `${y}-${['03-31', '06-30', '09-30', '12-31'][n - 1]}`];
     const tbc = c.tbc.filter(n => n >= q && !c.shut.some(s => s.start <= qSpan(n)[0] && s.end >= qSpan(n)[1]));
-    const tbcLine = tbc.length ? `<p class="bhint">Cleaning dates for ${tbc.map(n => 'Q' + n).join(' and ')} ${y} not out yet. Call before you go.</p>` : '';
-    const none = c.shut.length ? (inView ? '' : `<p class="bhint">Nothing shut in the next five weeks.</p>`) : `<p class="bhint">No closure listed after today.</p>`;
-    return `<section class="sched"><h3 class="sec">When Uncle shuts</h3>${cal}${none}${rows ? `<ol class="board">${rows}</ol>` : ''}${tbcLine}</section>`;
+    const tbcLine = tbc.length ? `<p class="bhint">${t('tbc', tbc.map(n => 'Q' + n), y)}</p>` : '';
+    const none = c.shut.length ? (inView ? '' : `<p class="bhint">${t('noneSoon')}</p>`) : `<p class="bhint">${t('noneAfter')}</p>`;
+    return `<section class="sched"><h3 class="sec">${t('whenShutsH')}</h3>${cal}${none}${rows ? `<ol class="board">${rows}</ol>` : ''}${tbcLine}</section>`;
   }
-  const shot = c => `<figure class="shot"><img src="photos/${c.id}.jpg" alt="Photo of ${esc(c.name)}" loading="lazy" decoding="async"><figcaption>Photo: NEA</figcaption></figure>`;
+  const shot = c => `<figure class="shot"><img src="photos/${c.id}.jpg" alt="${esc(t('photoAlt', c.name))}" loading="lazy" decoding="async"><figcaption>${t('photo')}</figcaption></figure>`;
 
   const quiet = c => {
     const r = c.remarks[0];
     const head = `${icon('info', 'i20')}<span class="qt">${stallsLine(c)}${r && r.length <= 34 ? ' · ' + esc(r) : ''}</span>`;
     if (!r || r.length <= 34) return `<div class="quiet">${head}</div>`;
-    return `<details class="quiet"><summary>${head}<span class="more">NEA notice</span></summary><p>${esc(r)}</p></details>`;
+    return `<details class="quiet"><summary>${head}<span class="more">${t('notice')}</span></summary><p>${esc(r)}</p></details>`;
   };
-  const goSign = ({ label = 'Go here instead', name, meta, attr = '' }) => `<button class="go-sign" ${attr}><span class="tx"><span class="gl">${esc(label)}</span><span class="nm">${esc(name)}</span><span class="mt">${esc(meta)}</span></span><span class="arr">${icon('arrow', 'i20')}</span></button>`;
+  const goSign = ({ label = t('goInstead'), name, meta, attr = '' }) => `<button class="go-sign" ${attr}><span class="tx"><span class="gl">${esc(label)}</span><span class="nm">${esc(name)}</span><span class="mt">${esc(meta)}</span></span><span class="arr">${icon('arrow', 'i20')}</span></button>`;
 
   /* food stickers for the spinner, 48px grid, flat fills with ink outline */
   const O = 'stroke="#1E1B18" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"';
@@ -492,13 +522,13 @@ ${c.alt && kind(c) !== 'open' ? goSign({ label: kind(c) === 'soon' ? 'Or go here
   const HEAD = k => `<g transform="translate(32 -6) scale(2)">${head(k)}</g>`;
   const star = (x, y) => `<path d="M${x} ${y - 8}l2.5 5.5 5.5 2.5-5.5 2.5-2.5 5.5-2.5-5.5-5.5-2.5 5.5-2.5z" fill="${KAYA}"/>`;
   const SPOTS = {
-    empty: { cast: 'makcik', caption: 'Paiseh, cannot find this one leh.', draw: k => body(k) + arm(k, 'M57 80L40 98L31 82') + arm(k, 'M103 80L120 98L129 82') + sleeves(k) + hand(k, 30, 78) + hand(k, 130, 78) + HEAD(k) },
-    loading: { cast: 'auntie', caption: 'Wait ah, pulling kopi…', draw: k => body(k) + arm(k, 'M103 80L122 62L128 40') + arm(k, 'M57 80L74 106L120 118') + sleeves(k) + hand(k, 128, 36) + hand(k, 122, 118) + HEAD(k) + `<path class="stream" d="M147 30C150 60 141 88 137 112" fill="none" stroke="${TEH}" stroke-width="5" stroke-linecap="round"/><rect x="117" y="14" width="24" height="24" rx="4" fill="${INK}"/><path d="M140 20l9 5-9 5z" fill="${INK}"/><path d="M126 110h24l-2 18a3 3 0 0 1-3 3h-14a3 3 0 0 1-3-3z" fill="${INK}"/>` },
-    far: { cast: 'makcik', caption: 'You overseas ah?', draw: k => body(k) + `<rect x="104" y="108" width="44" height="42" rx="6" fill="${TEH}"/><rect x="115" y="108" width="3.5" height="42" fill="${INK}"/><rect x="133.5" y="108" width="3.5" height="42" fill="${INK}"/><path d="M118 108v-7h16v7" fill="none" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>` + arm(k, 'M57 80L40 62L38 42') + arm(k, 'M103 80L118 94L124 99') + sleeves(k) + hand(k, 38, 38) + hand(k, 126, 100) + HEAD(k) },
-    good: { cast: 'auntie', caption: 'Shiok, nothing closed here!', draw: k => body(k) + arm(k, 'M57 80L50 106') + arm(k, 'M103 80L124 88L126 66') + sleeves(k) + hand(k, 49, 110) + `<rect x="121.5" y="40" width="7" height="16" rx="3.5" fill="${CAST[k].skin}"/>` + hand(k, 126, 60, 8) + HEAD(k) + star(146, 40) + star(26, 52) },
+    empty: { cast: 'makcik', draw: k => body(k) + arm(k, 'M57 80L40 98L31 82') + arm(k, 'M103 80L120 98L129 82') + sleeves(k) + hand(k, 30, 78) + hand(k, 130, 78) + HEAD(k) },
+    loading: { cast: 'auntie', draw: k => body(k) + arm(k, 'M103 80L122 62L128 40') + arm(k, 'M57 80L74 106L120 118') + sleeves(k) + hand(k, 128, 36) + hand(k, 122, 118) + HEAD(k) + `<path class="stream" d="M147 30C150 60 141 88 137 112" fill="none" stroke="${TEH}" stroke-width="5" stroke-linecap="round"/><rect x="117" y="14" width="24" height="24" rx="4" fill="${INK}"/><path d="M140 20l9 5-9 5z" fill="${INK}"/><path d="M126 110h24l-2 18a3 3 0 0 1-3 3h-14a3 3 0 0 1-3-3z" fill="${INK}"/>` },
+    far: { cast: 'makcik', draw: k => body(k) + `<rect x="104" y="108" width="44" height="42" rx="6" fill="${TEH}"/><rect x="115" y="108" width="3.5" height="42" fill="${INK}"/><rect x="133.5" y="108" width="3.5" height="42" fill="${INK}"/><path d="M118 108v-7h16v7" fill="none" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>` + arm(k, 'M57 80L40 62L38 42') + arm(k, 'M103 80L118 94L124 99') + sleeves(k) + hand(k, 38, 38) + hand(k, 126, 100) + HEAD(k) },
+    good: { cast: 'auntie', draw: k => body(k) + arm(k, 'M57 80L50 106') + arm(k, 'M103 80L124 88L126 66') + sleeves(k) + hand(k, 49, 110) + `<rect x="121.5" y="40" width="7" height="16" rx="3.5" fill="${CAST[k].skin}"/>` + hand(k, 126, 60, 8) + HEAD(k) + star(146, 40) + star(26, 52) },
   };
   const spot = (state, k = SPOTS[state].cast) => `<svg class="spot" viewBox="0 0 160 160" aria-hidden="true">${SPOTS[state].draw(k)}</svg>`;
-  const spotFig = (state, extra = '') => `<figure class="spot-fig">${spot(state)}<figcaption>${SPOTS[state].caption}</figcaption>${extra}</figure>`;
+  const spotFig = (state, extra = '') => `<figure class="spot-fig">${spot(state)}<figcaption>${t('spots')[state]}</figcaption>${extra}</figure>`;
 
   return { icon, placardParts, boardRow, verdict, sheetVerdict, schedule, shot, quiet, goSign, fmt, esc, short, kind, WORD, dist, FOOD, foodSVG, castFor, SPOTS, spot, spotFig };
 })();
@@ -513,7 +543,7 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const list = () => DATA[S.date];
 const byId = id => list().find(c => c.id === id);
 const RANK = { closed: 0, 'closing-soon': 1, unknown: 2, open: 3 };
-const WORDF = { closed: 'Closed', soon: 'Closing soon', unknown: 'Not sure', open: 'Open' };
+const WORDF = new Proxy({}, { get: (_, k) => t('word')[k] });
 const PICKS = ['maxwell-food-centre-kim-hua-market', 'old-airport-road-blk-51-51-old-airport-road-food-centre-and-shopping-mall', 'tiong-bahru-market'];
 const PLACES = [['Adam Road', 1.324131966, 103.8141632], ['Tampines', 1.3530, 103.9450], ['Jurong West', 1.3404, 103.7090], ['Toa Payoh', 1.3343, 103.8563], ["I'm overseas", 3.1390, 101.6869]];
 
@@ -551,7 +581,7 @@ function setHere(pos) {
 let lastFocus = null;
 function openPicker() {
   lastFocus = document.activeElement;
-  $('pk-list').innerHTML = PLACES.map(([n], i) => `<button class="pk${i === 4 ? ' far' : ''}" data-pk="${i}">${icon(i === 4 ? 'plane' : 'pin', 'i20')}${esc(n)}</button>`).join('');
+  $('pk-list').innerHTML = PLACES.map(([n], i) => `<button class="pk${i === 4 ? ' far' : ''}" data-pk="${i}">${icon(i === 4 ? 'plane' : 'pin', 'i20')}${esc(i === 4 ? t('overseas') : n)}</button>`).join('');
   $('picker').hidden = false; $('pk-list').querySelector('button').focus();
 }
 const closeModal = id => { $(id).hidden = true; lastFocus && lastFocus.isConnected && lastFocus.focus({ preventScroll: true }); };
@@ -564,10 +594,8 @@ $('picker').addEventListener('click', e => {
 /* share + chope */
 function shareText(c) {
   const n = short(c.name), a = c.alt && short(c.alt.name);
-  if (c.status.kind === 'closed') return `Uncle says ${n} closed today, go ${a} instead lah`;
-  if (c.status.kind === 'closing-soon') return `Uncle says ${n} closing ${fmt(c.status.closure.start)}, makan there before that lah`;
-  if (c.status.kind === 'open') return `Uncle says ${n} open today. Makan there?`;
-  return `Uncle not sure if ${n} open today, better call first`;
+  const say = t('shareText'), k = kind(c);
+  return k === 'closed' ? say.closed(n, a) : k === 'soon' ? say.soon(n, fmt(c.status.closure.start)) : say[k](n);
 }
 function tellKakis(c) {
   let link = ''; try { link = location.href.split('#')[0]; } catch {}
@@ -576,34 +604,33 @@ function tellKakis(c) {
     const box = $('sh-copy'), ta = box.querySelector('textarea');
     box.hidden = false; ta.value = txt; ta.focus(); ta.select();
     let ok = false; try { ok = document.execCommand('copy'); } catch {}
-    toast(ok ? 'Copied, send it to your kakis' : 'Text selected. Copy it and send to your kakis');
+    toast(t(ok ? 'copied' : 'selected'));
   };
   try {
     const p = navigator.clipboard && navigator.clipboard.writeText(txt);
     if (!p) { fallback(); return; }
-    p.then(() => toast('Copied, send it to your kakis'), fallback);
+    p.then(() => toast(t('copied')), fallback);
   } catch { fallback(); }
 }
 function toggleChope(id) {
   S.chope.has(id) ? S.chope.delete(id) : S.chope.add(id); saveChope();
-  toast(S.chope.has(id) ? 'Choped! Tissue on the table liao.' : 'Unchoped.');
+  toast(t(S.chope.has(id) ? 'chopedToast' : 'unchoped'));
   renderBody();
 }
 
 /* home */
 function headlineHTML() {
-  const n = KCOUNT(), pl = x => `${x} centre${x === 1 ? '' : 's'}`;
-  if (!n.closed && !n.soon) return 'Today nothing closed. Makan anywhere, shiok!';
-  return `${n.closed > 10 ? 'Alamak! ' : ''}Today ${pl(n.closed)} closed, ${n.soon} more closing soon.`;
+  const n = KCOUNT();
+  return !n.closed && !n.soon ? t('nothing') : t('headline', n.closed, n.soon, n.closed > 10);
 }
 function renderHead() {
   let top;
-  if (S.geo === 'locating') top = `<button class="btn btn-primary" disabled><span class="kl"></span>Uncle finding you…</button>`;
-  else if (S.near && S.here) top = `<div class="nearon">${icon('pin', 'i20')}<span>Showing the ${NEAR} nearest to you</span><button class="btn btn-text" data-unnear>Reset</button></div>`;
-  else top = `<button class="btn btn-primary" data-near>${icon('pin', 'i20')}Find makan near me</button>`;
-  $('ahead').innerHTML = `<header class="top"><!--@LOGO@--><span class="today">${fmt(S.date)}</span></header>` + `<p class="headline">${headlineHTML()}</p>` + top +
-    `<div class="search${S.aFilter ? ' filled' : ''}" id="asearch">${icon('search', 'i20')}<input id="aq" type="search" placeholder="Search hawker centre" autocomplete="off" aria-label="Search hawker centre" value="${esc(S.aFilter)}"><button class="clr" id="aclr" aria-label="Clear search"><span>${icon('close')}</span></button>` +
-    `<div class="sugg" id="asugg" hidden><b>Try</b><div class="chips">${PICKS.map(byId).map(c => `<button class="chip" data-open="${c.id}">${esc(pickName(c))}</button>`).join('')}</div></div></div>`;
+  if (S.geo === 'locating') top = `<button class="btn btn-primary" disabled><span class="kl"></span>${t('finding')}</button>`;
+  else if (S.near && S.here) top = `<div class="nearon">${icon('pin', 'i20')}<span>${t('showingNear', NEAR)}</span><button class="btn btn-text" data-unnear>${t('reset')}</button></div>`;
+  else top = `<button class="btn btn-primary" data-near>${icon('pin', 'i20')}${t('near')}</button>`;
+  $('ahead').innerHTML = `<header class="top"><span class="lockup"><!--@MARK@--><span class="wm">uncle says <b>closed</b></span></span><button class="langbtn" data-langs aria-label="Language: ${LANGS.find(l => l[0] === LANG)[1]}">${icon('globe', 'i20')}${t('langBtn')}</button></header>` + `<p class="today">${fmt(S.date)}</p><p class="headline">${headlineHTML()}</p>` + top +
+    `<div class="search${S.aFilter ? ' filled' : ''}" id="asearch">${icon('search', 'i20')}<input id="aq" type="search" placeholder="${t('search')}" autocomplete="off" aria-label="${t('search')}" value="${esc(S.aFilter)}"><button class="clr" id="aclr" aria-label="${t('clear')}"><span>${icon('close')}</span></button>` +
+    `<div class="sugg" id="asugg" hidden><b>${t('try')}</b><div class="chips">${PICKS.map(byId).map(c => `<button class="chip" data-open="${c.id}">${esc(pickName(c))}</button>`).join('')}</div></div></div>`;
   const q = $('aq'), sg = $('asugg');
   const syncSugg = () => { sg.hidden = !(document.activeElement === q && !q.value); };
   q.addEventListener('focus', syncSugg);
@@ -614,33 +641,33 @@ function renderHead() {
 }
 const NEAR = 6, PER_GROUP = 5, MATCHES = 8;
 const opts = (c, near) => ({ km: near ? km(S.here, c) : undefined, choped: S.chope.has(c.id) });
-const GROUPS = [['closed', 'Closed today'], ['soon', 'Closing soon'], ['unknown', 'Not sure, call first'], ['open', 'Open today']];
+const GROUPS = ['closed', 'soon', 'unknown', 'open'];
 const board = (rows, near) => rows.length ? `<ol class="board">${rows.map(c => UI.boardRow(c, opts(c, near))).join('')}</ol>` : '';
 // A header per status, so no count hides behind a link; a long group ends in its own "See all".
-const group = (k, title, rows, n = rows.length) => `<h3 class="shelf-h bgrp"><span class="tag tag-${k}"></span>${esc(title)}<span class="n">${rows.length}</span></h3>${board(rows.slice(0, n))}`
-  + (rows.length > n ? `<button class="see-all" data-fk="${k}">See all ${rows.length} ${title.toLowerCase()}${icon('arrow', 'i20')}</button>` : '');
+const group = (k, rows, n = rows.length) => `<h3 class="shelf-h bgrp"><span class="tag tag-${k}"></span>${esc(t('groups')[k])}<span class="n">${rows.length}</span></h3>${board(rows.slice(0, n))}`
+  + (rows.length > n ? `<button class="see-all" data-fk="${k}">${t('seeAllN', rows.length)}${icon('arrow', 'i20')}</button>` : '');
 const seeAll = label => `<button class="see-all" data-all>${label}${icon('arrow', 'i20')}</button>`;
-const stateCard = (state, sub) => `<div class="statecard">${UI.spot(state)}<div>${UI.SPOTS[state].caption}<p>${esc(sub)}</p></div></div>`;
+const stateCard = (state, sub) => `<div class="statecard">${UI.spot(state)}<div>${t('spots')[state]}<p>${esc(sub)}</p></div></div>`;
 function renderHomeBody() {
   const b = $('abody'), L = list(), near = !!(S.near && S.here);
   if (S.aFilter) {
     const r = matches(S.aFilter);
-    b.innerHTML = r.length ? board(r.slice(0, MATCHES)) + (r.length > MATCHES ? seeAll(`See all ${r.length} matches`) : '')
-      : UI.spotFig('empty', `<p>Try a road or estate, like Bedok or Tiong Bahru.</p>`);
+    b.innerHTML = r.length ? board(r.slice(0, MATCHES)) + (r.length > MATCHES ? seeAll(t('seeAllMatches', r.length)) : '')
+      : UI.spotFig('empty', `<p>${t('emptyHint')}</p>`);
     return;
   }
   if (S.geo === 'locating') { b.innerHTML = UI.spotFig('loading'); return; }
   const ch = [...S.chope].map(byId).filter(Boolean);
-  const top = ch.length ? UI.verdict(ch[0], opts(ch[0], near)) + board(ch.slice(1), near) : `<p class="bhint">Chope your usual centre and Uncle answers it first.</p>`;
-  const tail = seeAll(`See all ${L.length} centres`) + `<button class="btn btn-soft eat" data-eat>${icon('susan', 'i20')}Eat where ah? Let Uncle pick</button>`;
+  const top = ch.length ? UI.verdict(ch[0], opts(ch[0], near)) + board(ch.slice(1), near) : `<p class="bhint">${t('chopeHint')}</p>`;
+  const tail = seeAll(t('seeAllCentres', L.length)) + `<button class="btn btn-soft eat" data-eat>${icon('susan', 'i20')}${t('eat')}</button>`;
   if (near) {
     const rows = nearest(NEAR + ch.length).map(x => x.c).filter(c => !S.chope.has(c.id)).slice(0, NEAR);
-    b.innerHTML = top + `<h3 class="shelf-h bgrp">${icon('pin', 'i20')}Nearest to you</h3>` + board(rows, true) + tail;
+    b.innerHTML = top + `<h3 class="shelf-h bgrp">${icon('pin', 'i20')}${t('nearest')}</h3>` + board(rows, true) + tail;
     return;
   }
-  const geo = S.geo === 'far' ? stateCard('far', "Showing today's closures for all of Singapore.") : '';
-  const shut = GROUPS.slice(0, 2).map(([k, t]) => [k, t, L.filter(c => kind(c) === k && !S.chope.has(c.id)).sort((a, c) => a.name.localeCompare(c.name))]).filter(g => g[2].length);
-  b.innerHTML = top + geo + (shut.length ? shut.map(([k, t, r]) => group(k, t, r, PER_GROUP)).join('') : UI.spotFig('good')) + tail;
+  const geo = S.geo === 'far' ? stateCard('far', t('farSub')) : '';
+  const shut = GROUPS.slice(0, 2).map(k => [k, L.filter(c => kind(c) === k && !S.chope.has(c.id)).sort((a, c) => a.name.localeCompare(c.name))]).filter(g => g[1].length);
+  b.innerHTML = top + geo + (shut.length ? shut.map(([k, r]) => group(k, r, PER_GROUP)).join('') : UI.spotFig('good')) + tail;
 }
 function renderWall() {
   let rows = S.aFilter ? matches(S.aFilter) : [...list()];
@@ -648,11 +675,11 @@ function renderWall() {
   const near = S.near && S.here;
   if (near) rows.sort((a, b) => km(S.here, a) - km(S.here, b));
   else if (!S.aFilter) rows.sort((a, b) => (S.chope.has(b.id) - S.chope.has(a.id)) || RANK[a.status.kind] - RANK[b.status.kind] || a.name.localeCompare(b.name));
-  $('wallhead').innerHTML = `<button class="xbtn" data-home aria-label="Back to today">${icon('back', 'i20')}</button><h2>${S.aStatus ? `${rows.length} ${WORDF[S.aStatus].toLowerCase()}` : S.aFilter ? `${rows.length} matches` : `All ${rows.length} centres`}</h2>`;
-  $('wallchip').innerHTML = S.aStatus ? `<button class="showing" data-unfilter aria-label="Clear filter: ${WORDF[S.aStatus]}">Showing: ${WORDF[S.aStatus]}<span class="x">${icon('close')}</span></button>` : '';
+  $('wallhead').innerHTML = `<button class="xbtn" data-home aria-label="${t('backHome')}">${icon('back', 'i20')}</button><h2>${S.aStatus ? t('countWord', rows.length, WORDF[S.aStatus]) : S.aFilter ? t('matches', rows.length) : t('all', rows.length)}</h2>`;
+  $('wallchip').innerHTML = S.aStatus ? `<button class="showing" data-unfilter aria-label="${t('clearFilter', WORDF[S.aStatus])}">${t('showing', WORDF[S.aStatus])}<span class="x">${icon('close')}</span></button>` : '';
   const grouped = !near && !S.aFilter && !S.aStatus;
-  const groups = [['chope', 'Your chope', rows.filter(c => S.chope.has(c.id))], ...GROUPS.map(([k, t]) => [k, t, rows.filter(c => kind(c) === k && !S.chope.has(c.id))])];
-  $('wall').innerHTML = (grouped ? groups.filter(g => g[2].length).map(([k, t, r]) => group(k, t, r)).join('') : board(rows, near)) || UI.spotFig('good');
+  const groups = [['chope', rows.filter(c => S.chope.has(c.id))], ...GROUPS.map(k => [k, rows.filter(c => kind(c) === k && !S.chope.has(c.id))])];
+  $('wall').innerHTML = (grouped ? groups.filter(g => g[1].length).map(([k, r]) => group(k, r)).join('') : board(rows, near)) || UI.spotFig('good');
 }
 function renderBody() { if (S.aView === 'wall') renderWall(); else renderHomeBody(); }
 function setAView(v) {
@@ -696,15 +723,15 @@ function openSheet(c, quiet) {
   const k = kind(c);
   $('sh-name').textContent = c.name;
   const addr = c.remarks.includes(c.address) ? '' : c.address;
-  $('sh-addr').textContent = [addr, S.here ? `${dist(km(S.here, c))} from you` : ''].filter(Boolean).join(' · ');
+  $('sh-addr').textContent = [addr, S.here ? t('fromYou', dist(km(S.here, c))) : ''].filter(Boolean).join(' · ');
   $('sh-addr').hidden = !$('sh-addr').textContent;
   const ac = c.alt && byId(c.alt.id);
-  const go = ac ? UI.goSign({ label: k === 'soon' ? 'Or go here' : 'Go here instead', name: short(ac.name), meta: `Open today · ${c.alt.km} km away`, attr: 'id="goalt"' }) : '';
+  const go = ac ? UI.goSign({ label: t(k === 'soon' ? 'orGo' : 'goInstead'), name: short(ac.name), meta: t('openKm', c.alt.km), attr: 'id="goalt"' }) : '';
   $('sh-hero').innerHTML = UI.sheetVerdict(c) + go;
   $('sh-note').innerHTML = UI.schedule(c, S.date);
   $('sh-rem').innerHTML = UI.quiet(c) + UI.shot(c);
   const ch = $('sh-chope'), on = S.chope.has(c.id);
-  ch.setAttribute('aria-pressed', on); ch.innerHTML = icon(on ? 'tissueOn' : 'tissue', 'i20') + (on ? 'Choped' : 'Chope this centre');
+  ch.setAttribute('aria-pressed', on); ch.innerHTML = icon(on ? 'tissueOn' : 'tissue', 'i20') + t(on ? 'chopedBtn' : 'chope');
   if (!quiet) { $('sh-copy').hidden = true; }
   sheet.hidden = false;
   const panel = sheet.querySelector('.panel');
@@ -712,7 +739,6 @@ function openSheet(c, quiet) {
 }
 const closeSheet = () => { if (sheet.hidden) return; sheet.hidden = true; lastFocus && lastFocus.isConnected && lastFocus.focus({ preventScroll: true }); };
 $('sh-x').innerHTML = icon('close', 'i20');
-$('sh-share').innerHTML = icon('share', 'i20') + 'Tell my kakis';
 sheet.addEventListener('click', e => {
   if (e.target.closest('[data-close]')) { closeSheet(); return; }
   if (e.target.closest('#goalt')) { sheet.hidden = true; goA(byId(sheetC.alt.id)); return; }
@@ -721,7 +747,8 @@ sheet.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  if (!$('spin').hidden) closeModal('spin');
+  if (!$('langs').hidden && langChosen) closeModal('langs');
+  else if (!$('spin').hidden) closeModal('spin');
   else if (!$('picker').hidden) closeModal('picker');
   else closeSheet();
 });
@@ -732,7 +759,6 @@ const STEP = 360 / WHEEL.length;
 const susan = $('susan');
 susan.innerHTML = '<circle cx="120" cy="120" r="120" class="f-soft2"/>' + WHEEL.map((f, i) => `<g transform="rotate(${i * STEP} 120 120)"><circle cx="120" cy="33" r="27" class="f-paper"/><svg x="98" y="11" width="44" height="44" viewBox="0 0 48 48">${UI.FOOD[f][1]()}</svg></g>`).join('')
   + '<circle cx="120" cy="120" r="34" class="f-soft"/><svg x="96" y="96" width="48" height="48" viewBox="0 0 48 48">' + UI.FOOD.tehTarik[1]() + '</svg>';
-const QUIPS = ['Can! Go makan there lah.', 'Shiok choice, confirm open.', 'Boleh! Go go go.', "Don't paiseh, just go.", 'Tapau also can.'];
 const angleNow = () => { const m = getComputedStyle(susan).transform; if (!m || m === 'none') return 0; const v = new DOMMatrixReadOnly(m); return Math.atan2(v.b, v.a) * 180 / Math.PI; };
 const setRot = (deg, ms, ease = 'cubic-bezier(.15,.6,.25,1)') => { susan.style.transition = ms ? `transform ${ms}ms ${ease}` : 'none'; susan.style.transform = `rotate(${deg}deg)`; };
 function eatWhere() {
@@ -749,14 +775,14 @@ function eatWhere() {
     const off = (((-(i * STEP) - a) % 360) + 540) % 360 - 180;
     setRot(a, 0); void susan.getBoundingClientRect();
     S.rot = a + off; setRot(S.rot, REDUCED ? 0 : 260, 'ease-out');
-    $('dish').textContent = `Craving ${UI.FOOD[WHEEL[i]][0].toLowerCase()}?`;
+    $('dish').textContent = t('craving', DISHES[LANG][i]);
     if (!REDUCED && $('dish').animate) $('dish').animate([{ transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { duration: 260, easing: 'cubic-bezier(.3,1.6,.5,1)' });
-    $('quip').textContent = QUIPS[Math.floor(Math.random() * QUIPS.length)];
+    const quips = t('quips'); $('quip').textContent = quips[Math.floor(Math.random() * quips.length)];
     const d = S.here ? ` · ${dist(km(S.here, pick))}` : '';
-    act.innerHTML = UI.goSign({ label: 'Go here and hunt for it', name: short(pick.name), meta: `Open today${d}`, attr: 'data-act="show"' }) + `<div class="acts"><button class="btn btn-soft" data-act="again">${icon('susan', 'i20')}Spin again</button><button class="btn btn-soft" data-act="close">Close</button></div>`;
+    act.innerHTML = UI.goSign({ label: t('hunt'), name: short(pick.name), meta: `${t('openToday')}${d}`, attr: 'data-act="show"' }) + `<div class="acts"><button class="btn btn-soft" data-act="again">${icon('susan', 'i20')}${t('again')}</button><button class="btn btn-soft" data-act="close">${t('close')}</button></div>`;
     act.hidden = false; act.querySelector('.go-sign').focus({ preventScroll: true });
   };
-  spin.hidden = false; act.hidden = true; $('dish').textContent = ''; $('quip').textContent = 'Tap anywhere to stop';
+  spin.hidden = false; act.hidden = true; $('dish').textContent = ''; $('quip').textContent = t('tapStop');
   spin.onclick = e => {
     e.stopPropagation();
     if (!done) { land(); return; }
@@ -772,6 +798,32 @@ function eatWhere() {
 }
 document.addEventListener('click', e => { if (e.target.closest('[data-eat]')) eatWhere(); });
 
+/* language: chosen once on first open, kept on the phone, changed from the header button */
+function applyStatic() {
+  document.documentElement.lang = LOCALE[LANG];
+  $('sh-share').innerHTML = icon('share', 'i20') + t('share');
+  $('sh-copy-l').textContent = t('copyLabel');
+  $('sh-x').setAttribute('aria-label', t('close'));
+  $('spinh').textContent = t('eatTitle');
+  $('pk-h').textContent = t('pkTitle');
+  document.querySelector('#picker .lead').textContent = t('pkLead');
+  document.querySelector('[data-pk-close]').textContent = t('cancel');
+}
+function openLangs() {
+  lastFocus = document.activeElement;
+  $('lang-list').innerHTML = LANGS.map(([l, n]) => `<button class="lang-opt" data-lang="${l}" lang="${l}" aria-current="${l === LANG}">${n}${icon('open')}</button>`).join('');
+  $('langs').hidden = false; $('lang-list').querySelector('[aria-current=true]').focus();
+}
+let langChosen = false;
+function setLang(l) {
+  LANG = l; langChosen = true; try { localStorage.setItem('usc-lang', l); } catch {}
+  applyStatic(); $('langs').hidden = true;
+  if (S.aView === 'wall') renderHead(); setAView(S.aView);
+  if (!sheet.hidden) openSheet(sheetC, true);
+}
+$('langs').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (b) setLang(b.dataset.lang); });
+document.addEventListener('click', e => { if (e.target.closest('[data-langs]')) openLangs(); });
+
 /* demo bar */
 function setDate(d) {
   S.date = d; S.aStatus = null; sheet.hidden = true;
@@ -785,6 +837,10 @@ $('reset').addEventListener('click', () => {
   setAView('home'); toast('Demo reset. Chope and location cleared.');
 });
 
+let saved = null; try { saved = localStorage.getItem('usc-lang'); } catch {}
+if (LOCALE[saved]) { LANG = saved; langChosen = true; }
+applyStatic();
 setAView('home');
+if (!LOCALE[saved]) openLangs();
 })();
 </script>
