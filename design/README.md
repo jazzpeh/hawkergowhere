@@ -1,6 +1,6 @@
 # Design
 
-The approved direction for Uncle Says Closed, and the throwaway prototype that proves it. The app in `src/` still has the old list/cards look; it gets rebuilt from this once the design is signed off.
+The approved direction for HawkerGoWhere (working name until 2026-10-31: Uncle Says Closed), and the throwaway prototype that proves it. The app in `src/` still has the old list/cards look; it gets rebuilt from this once the design is signed off.
 
 ## Links
 
@@ -27,11 +27,12 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 
 - `prototype/page.html` is the whole prototype: tokens, components, cast, spinner and state. `prototype/i18n.js` holds every string in English, Chinese, Malay and Tamil, plus the uncle's lines and dish names. `build.py` inlines the data, the strings and the mark.
 - `prototype/make-data.ts` runs the real domain code (`scripts/parse.ts`, `src/domain/*`) over the fixture for 20 Oct and 7 Dec. Each centre also carries `shut` (its dated closures that end today or later) and `tbc` (quarters whose cleaning dates are not out yet) for the Board sheet.
-- `brand/mark.svg` is the logo: a chilli disc with eyes peeking through the gap under a shutter. `brand/mark-icon.svg` is the 512px app icon. The wordmark is "uncle says **closed**" in lowercase Plus Jakarta Sans 800, with "closed" in chilli. The four earlier concepts stay in `brand/` for reference.
+- `brand/mark.svg` is the logo: a pandan location pin holding a bowl and chopsticks ("where to eat"). `brand/mark-icon.svg` is the 512px app icon. The wordmark is "Hawker**GoWhere**" in Plus Jakarta Sans 800, "GoWhere" in pandan. Earlier concepts stay in `brand/` for reference.
 - `decisions.tsv` is the decision log, one row per call.
 
 ## Design rules
 
+- HawkerGoWhere is an independent concept that borrows the government's GoWhere naming as a pitch. Every page says so in the footer, in the chosen language; it never uses a government crest, a gov.sg domain or government design-system branding. The uncle stays as the voice inside the app.
 - Board is the design. The prototype has no other layouts.
 - White and simple. White page, ink `#16181D` text, grey `#5B6068` secondary text, hairlines `#E4E5E9`, soft fills `#F3F4F6` for search, chips and secondary buttons. Colour only where it means something: chilli `#D22A1D` closed, pandan `#1C7E53` open and the main action, kaya `#F6C343` closing soon and "Go here" (amber `#8F5600` when it is text on white), slate `#6A6F78` not sure. The one solid block on a screen is the verdict card; the "Go here" sign inside it is white. Teh, peranakan and sakura survive only inside the illustrations.
 - Language: on first open a full-screen chooser offers English, 中文, Bahasa Melayu and தமிழ் as big buttons; the choice is kept on the phone and the header's globe button changes it. Everything switches, dates included (via `Intl`, e.g. 12月9日周三, Rab, 9 Dis). Centre names stay in English because NEA publishes no translations. The verdict also shows the other three languages underneath. Chinese is the priority second language: at 70+ only 21% mainly speak English at home.

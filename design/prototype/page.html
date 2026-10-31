@@ -1,4 +1,4 @@
-<title>Uncle Says Closed</title>
+<title>HawkerGoWhere</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Ma+Shan+Zheng&family=Noto+Sans+Tamil:wght@400;600;700&display=swap">
@@ -39,7 +39,7 @@ a{color:var(--pandan-press)}
 .lockup{display:flex;align-items:center;gap:8px;min-width:0;margin-right:auto}
 .lockup svg{display:block;flex:none;width:34px;height:34px}
 .wm{font:800 20px/1 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:-.02em;white-space:nowrap}
-.wm b{font-weight:800;color:var(--chilli-aa)}
+.wm b{font-weight:800;color:var(--pandan-aa)}
 .langbtn{display:inline-flex;align-items:center;gap:6px;flex:none;height:44px;padding:0 14px 0 12px;border:0;border-radius:999px;background:var(--soft);font:700 16px/1 var(--ui);white-space:nowrap}
 .langbtn .i{color:var(--ink-2)}
 .tsbtn{padding:0 14px;font-weight:800}
@@ -243,6 +243,7 @@ div.quiet,.quiet summary{display:flex;align-items:center;gap:8px;min-height:44px
 /* demo bar + attribution */
 .demo{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;font:400 calc(13px * var(--ts))/1.45 var(--ui);color:var(--ink-2)}
 .demo p{margin:0}
+.disclaim{font-weight:700;color:var(--ink)}
 .demo-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .dates{display:flex;background:var(--soft);border-radius:10px;padding:3px}
 .dates button{border:0;background:transparent;height:38px;padding:0 12px;border-radius:8px;font:600 calc(13px * var(--ts))/1 var(--ui);color:var(--ink)}
@@ -284,6 +285,7 @@ div.quiet,.quiet summary{display:flex;align-items:center;gap:8px;min-height:44px
   </div>
 
   <footer class="demo" aria-label="Demo controls">
+    <p class="disclaim" id="disclaim"></p>
     <p>Prototype · data as of 20 Oct 2026 · tap 7 Dec to see a busy day</p>
     <div class="demo-row">
       <div class="dates" id="dates" role="group" aria-label="Pretend today is">
@@ -635,7 +637,7 @@ function renderHead() {
   if (S.geo === 'locating') top = `<button class="btn btn-primary" disabled><span class="kl"></span>${t('finding')}</button>`;
   else if (S.near && S.here) top = `<div class="nearon">${icon('pin', 'i20')}<span>${t('showingNear', NEAR)}</span><button class="btn btn-text" data-unnear>${t('reset')}</button></div>`;
   else top = `<button class="btn btn-primary" data-near>${icon('pin', 'i20')}${t('near')}</button>`;
-  $('ahead').innerHTML = `<header class="top"><span class="lockup"><!--@MARK@--><span class="wm">uncle says <b>closed</b></span></span><button class="langbtn" data-langs aria-label="Language: ${LANGS.find(l => l[0] === LANG)[1]}">${icon('globe', 'i20')}${t('langBtn')}</button></header>` + `<div class="dayrow"><p class="today">${fmt(S.date)}</p><button class="langbtn tsbtn" data-ts aria-label="${t('textSize')}"><small>A</small>A+</button></div><p class="headline">${headlineHTML()}</p>` + top +
+  $('ahead').innerHTML = `<header class="top"><span class="lockup"><!--@MARK@--><span class="wm">Hawker<b>GoWhere</b></span></span><button class="langbtn" data-langs aria-label="Language: ${LANGS.find(l => l[0] === LANG)[1]}">${icon('globe', 'i20')}${t('langBtn')}</button></header>` + `<div class="dayrow"><p class="today">${fmt(S.date)}</p><button class="langbtn tsbtn" data-ts aria-label="${t('textSize')}"><small>A</small>A+</button></div><p class="headline">${headlineHTML()}</p>` + top +
     `<div class="search${S.aFilter ? ' filled' : ''}" id="asearch">${icon('search', 'i20')}<input id="aq" type="search" placeholder="${t('search')}" autocomplete="off" aria-label="${t('search')}" value="${esc(S.aFilter)}"><button class="clr" id="aclr" aria-label="${t('clear')}"><span>${icon('close')}</span></button>` +
     `<div class="sugg" id="asugg" hidden><b>${t('try')}</b><div class="chips">${PICKS.map(byId).map(c => `<button class="chip" data-open="${c.id}">${esc(pickName(c))}</button>`).join('')}</div></div></div>`;
   const q = $('aq'), sg = $('asugg');
@@ -809,6 +811,7 @@ document.addEventListener('click', e => { if (e.target.closest('[data-eat]')) ea
 function applyStatic() {
   document.documentElement.lang = LOCALE[LANG];
   $('sh-share').innerHTML = icon('share', 'i20') + t('share');
+  $('disclaim').textContent = t('disclaimer');
   $('sh-copy-l').textContent = t('copyLabel');
   $('sh-x').setAttribute('aria-label', t('close'));
   $('spinh').textContent = t('eatTitle');
