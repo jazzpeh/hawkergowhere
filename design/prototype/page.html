@@ -95,6 +95,13 @@ a{color:var(--pandan-press)}
 .tag-closed{background:var(--chilli-aa)}.tag-soon{background:var(--kaya)}.tag-unknown{background:var(--slate-aa)}.tag-open{background:var(--pandan-aa)}.tag-chope{background:var(--peranakan)}
 .tile-hit{display:block;width:100%;border:0;padding:0;background:none;text-align:left;color:var(--ink)}
 [data-tile].flash{animation:flash 1.2s 2}
+/* everything you can press gives a little under your finger */
+.btn,.go-sign,.chip,.see-all,.xbtn,.langbtn,.lang-opt,.pk,.verdict > .tile-hit,button.cal-d{transition:transform .08s ease-out,background-color .12s}
+:is(.btn,.go-sign,.chip,.see-all,.xbtn,.langbtn,.lang-opt,.pk,button.cal-d):active{transform:scale(.96)}
+.verdict > .tile-hit:active{transform:scale(.99)}
+.pop{animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{40%{transform:scale(1.06)}}
+mark{background:#FFE58A;color:inherit;border-radius:3px;padding:0 1px}
 @keyframes flash{50%{box-shadow:0 0 0 5px var(--kaya)}}
 
 /* board: your chope answered first in one solid verdict card, then light rows with hairlines. Colour sits only on the dot and the date. */
@@ -145,10 +152,18 @@ a{color:var(--pandan-press)}
 .cal-d.shut{background:var(--chilli-aa);color:var(--paper)}
 .cal-d.shut.past{opacity:.45}
 .cal-d.now{outline:2px solid var(--ink);outline-offset:1px}
+button.cal-d{width:100%;border:0;background:none;color:inherit;cursor:pointer}
+button.cal-d.shut{background:var(--chilli-aa);color:var(--paper)}
+.cal-d[aria-pressed=true]{box-shadow:inset 0 0 0 3px var(--pandan-aa)}
+.cal-d.shut[aria-pressed=true]{box-shadow:inset 0 0 0 3px var(--ink)}
+.cal-ans{margin:0;min-height:1.45em;font:700 calc(17px * var(--ts))/1.45 var(--ui);color:var(--ink-2)}
+.cal-ans.ok{color:var(--pandan-aa)}.cal-ans.no{color:var(--chilli-aa)}.cal-ans.tbc{color:var(--ink-2)}
+.cal-d.tbc{color:var(--ink-2);background-image:repeating-linear-gradient(135deg,transparent 0 5px,var(--soft) 5px 7px)}
 .cal-key{display:flex;align-items:center;gap:16px;margin:0;font:600 calc(15px * var(--ts))/1.3 var(--ui);color:var(--ink-2)}
 .cal-key span{display:inline-flex;align-items:center;gap:6px}
 .cal-key i{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--chilli-aa)}
 .cal-key i.now{background:none;outline:2px solid var(--ink);outline-offset:-2px}
+.cal-key i.tbc{background:repeating-linear-gradient(135deg,var(--paper) 0 3px,var(--soft-2) 3px 5px);outline:1px solid var(--line)}
 .board .bline{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:64px;padding:12px 16px}
 .sched .bhint{margin:0}
 .shot{margin:0;display:flex;flex-direction:column;gap:6px}
@@ -186,7 +201,9 @@ div.quiet,.quiet summary{display:flex;align-items:center;gap:8px;min-height:44px
 @keyframes up{from{transform:translateY(100%)}}
 .panel > div:empty:not(.handle){display:none}
 .panel:focus{outline:none}
-.handle{width:40px;height:4px;margin:0 auto;border-radius:999px;background:var(--soft-2)}
+/* the handle and header drag the sheet down to close it */
+.handle{width:40px;height:5px;margin:-10px auto 0;padding:12px 60px;box-sizing:content-box;border-radius:999px;background:var(--soft-2);background-clip:content-box;cursor:grab}
+.handle,.sh-head{touch-action:none}
 .sh-head{display:flex;align-items:flex-start;gap:12px}
 .sh-head .tx{flex:1;min-width:0;padding-top:4px}
 .sh-head h2{margin:0;font:800 calc(22px * var(--ts))/1.3 var(--ui);text-wrap:balance}
@@ -403,9 +420,11 @@ const UI = (() => {
   const day = ymd => fmtDate(ymd, false);
   const when = c => { const s = c.status; return { closed: () => t('whenBack', day(s.reopensOn)), soon: () => t('whenShuts', day(s.closure.start)), unknown: () => t('callFirst'), open: () => t('open') }[kind(c)](); };
   const why = c => { const cl = c.status.closure; return cl ? t('shut')[cl.kind] : stallsLine(c); };
-  const boardRow = (c, { km, choped } = {}) => `<li class="brow s-${kind(c)}" data-tile="${c.id}">
+  // The letters you searched for, marked in the centre's name.
+  const hl = (s, q = '') => { q = q.trim(); const i = q ? s.toLowerCase().indexOf(q.toLowerCase()) : -1; return i < 0 ? esc(s) : `${esc(s.slice(0, i))}<mark>${esc(s.slice(i, i + q.length))}</mark>${esc(s.slice(i + q.length))}`; };
+  const boardRow = (c, { km, choped, q } = {}) => `<li class="brow s-${kind(c)}" data-tile="${c.id}">
 <button class="tile-hit" data-id="${c.id}" aria-label="${label(c, km, choped)}, ${esc(when(c))}">
-<span class="bdot"></span><span><span class="bn"><span>${esc(short(c.name))}</span>${choped ? icon('tissueOn') : ''}</span><span class="bsub">${esc(why(c))}${km !== undefined ? ' · ' + dist(km) : ''}</span></span><span class="bwhen">${esc(when(c))}</span>
+<span class="bdot"></span><span><span class="bn"><span>${hl(short(c.name), q)}</span>${choped ? icon('tissueOn') : ''}</span><span class="bsub">${esc(why(c))}${km !== undefined ? ' · ' + dist(km) : ''}</span></span><span class="bwhen">${esc(when(c))}</span>
 </button></li>`;
   const BIG = new Proxy({}, { get: (_, k) => t('big')[k] });
   // English keeps the domain's own line; the other languages build theirs from the same status.
@@ -433,11 +452,12 @@ ${c.alt && kind(c) !== 'open' ? goSign({ label: t(kind(c) === 'soon' ? 'orGo' : 
     const inView = c.shut.some(s => s.start <= to && s.end >= from);
     // A calendar that is all red says less than the one row under it.
     const allShut = c.shut.some(s => s.start <= from && s.end >= to);
-    const cal = !inView || allShut ? '' : `<div class="cal" aria-hidden="true">${[...t('dow')].map(d => `<span class="cal-h">${d}</span>`).join('')}${Array.from({ length: 35 }, (_, i) => {
+    const cal = !inView || allShut ? '' : `<div class="cal">${[...t('dow')].map(d => `<span class="cal-h" aria-hidden="true">${d}</span>`).join('')}${Array.from({ length: 35 }, (_, i) => {
       const d = addDays(from, i), [, m, n] = d.split('-').map(Number);
-      const cls = ['cal-d', shutOn(d) && 'shut', d < today && 'past', d === today && 'now', (i === 0 || n === 1) && 'm'].filter(Boolean).join(' ');
-      return `<span class="${cls}">${i === 0 || n === 1 ? `<b>${monthShort(m)}</b>` : ''}${n}</span>`;
-    }).join('')}</div><p class="cal-key"><span><i></i>${t('shutKey')}</span><span><i class="now"></i>${t('today')}</span></p>`;
+      const cls = ['cal-d', shutOn(d) && 'shut', !shutOn(d) && !c.known.includes(quarterOf(d)) && 'tbc', d < today && 'past', d === today && 'now', (i === 0 || n === 1) && 'm'].filter(Boolean).join(' ');
+      const face = `${i === 0 || n === 1 ? `<b>${monthShort(m)}</b>` : ''}${n}`;
+      return d < today ? `<span class="${cls}" aria-hidden="true">${face}</span>` : `<button class="${cls}" data-day="${d}" aria-pressed="false" aria-label="${esc(fmt(d))}">${face}</button>`;
+    }).join('')}</div><p class="cal-key"><span><i></i>${t('shutKey')}</span><span><i class="now"></i>${t('today')}</span>${c.known.length && Array.from({ length: 35 }, (_, i) => addDays(from, i)).some(d => !c.known.includes(quarterOf(d))) ? `<span><i class="tbc"></i>${t('notOut')}</span>` : ''}</p><p class="cal-ans" id="cal-ans" aria-live="polite">${t('tapDay')}</p>`;
     const rows = c.shut.map(s => {
       const now = s.start <= today, back = addDays(s.end, 1);
       const sub = now ? t('since', fmt(s.start), fmt(back)) : t('range', fmt(s.start), fmt(s.end));
@@ -452,6 +472,13 @@ ${c.alt && kind(c) !== 'open' ? goSign({ label: t(kind(c) === 'soon' ? 'orGo' : 
     const none = c.shut.length ? (inView ? '' : `<p class="bhint">${t('noneSoon')}</p>`) : `<p class="bhint">${t('noneAfter')}</p>`;
     return `<section class="sched"><h3 class="sec">${t('whenShutsH')}</h3>${cal}${none}${rows ? `<ol class="board">${rows}</ol>` : ''}${tbcLine}</section>`;
   }
+  const quarterOf = d => `${d.slice(0, 4)}-${Math.ceil(+d.slice(5, 7) / 3)}`;
+  // Open only where that quarter's cleaning dates are published; beyond them Uncle cannot say.
+  const dayAnswer = (c, d) => {
+    const s = c.shut.find(x => x.start <= d && d <= x.end);
+    if (s) return { k: 'no', text: t('dayShut', fmt(d), t('kindWord')[s.kind]) };
+    return c.known.includes(quarterOf(d)) ? { k: 'ok', text: t('dayOpen', fmt(d)) } : { k: 'tbc', text: t('dayUnsure', fmt(d)) };
+  };
   const shot = c => `<figure class="shot"><img src="photos/${c.id}.jpg" alt="${esc(t('photoAlt', c.name))}" loading="lazy" decoding="async"><figcaption>${t('photo')}</figcaption></figure>`;
 
   const quiet = c => {
@@ -539,7 +566,7 @@ ${c.alt && kind(c) !== 'open' ? goSign({ label: t(kind(c) === 'soon' ? 'orGo' : 
   const spot = (state, k = SPOTS[state].cast) => `<svg class="spot" viewBox="0 0 160 160" aria-hidden="true">${SPOTS[state].draw(k)}</svg>`;
   const spotFig = (state, extra = '') => `<figure class="spot-fig">${spot(state)}<figcaption>${t('spots')[state]}</figcaption>${extra}</figure>`;
 
-  return { icon, placardParts, boardRow, verdict, sheetVerdict, schedule, shot, quiet, goSign, fmt, esc, short, kind, WORD, dist, FOOD, foodSVG, castFor, SPOTS, spot, spotFig };
+  return { icon, placardParts, boardRow, verdict, sheetVerdict, schedule, dayAnswer, shot, quiet, goSign, fmt, esc, short, kind, WORD, dist, FOOD, foodSVG, castFor, SPOTS, spot, spotFig };
 })();
 
 (() => {
@@ -649,7 +676,7 @@ function renderHead() {
   $('aclr').onclick = () => { q.value = ''; S.aFilter = ''; $('asearch').classList.remove('filled'); renderBody(); q.focus(); };
 }
 const NEAR = 6, PER_GROUP = 5, MATCHES = 8;
-const opts = (c, near) => ({ km: near ? km(S.here, c) : undefined, choped: S.chope.has(c.id) });
+const opts = (c, near) => ({ km: near ? km(S.here, c) : undefined, choped: S.chope.has(c.id), q: S.aFilter });
 const GROUPS = ['closed', 'soon', 'unknown', 'open'];
 const board = (rows, near) => rows.length ? `<ol class="board">${rows.map(c => UI.boardRow(c, opts(c, near))).join('')}</ol>` : '';
 // A header per status, so no count hides behind a link; a long group ends in its own "See all".
@@ -751,9 +778,32 @@ $('sh-x').innerHTML = icon('close', 'i20');
 sheet.addEventListener('click', e => {
   if (e.target.closest('[data-close]')) { closeSheet(); return; }
   if (e.target.closest('#goalt')) { sheet.hidden = true; goA(byId(sheetC.alt.id)); return; }
-  if (e.target.closest('#sh-chope')) { toggleChope(sheetC.id); openSheet(sheetC, true); return; }
+  if (e.target.closest('#sh-chope')) { toggleChope(sheetC.id); openSheet(sheetC, true); replay($('sh-chope'), 'pop'); try { navigator.vibrate && navigator.vibrate(12); } catch {} return; }
+  const day = e.target.closest('[data-day]');
+  if (day) {
+    const a = UI.dayAnswer(sheetC, day.dataset.day), ans = $('cal-ans');
+    sheet.querySelectorAll('[data-day][aria-pressed=true]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    day.setAttribute('aria-pressed', 'true'); ans.textContent = a.text; ans.className = `cal-ans ${a.k}`;
+    return;
+  }
   if (e.target.closest('#sh-share')) tellKakis(sheetC);
 });
+// Drag the sheet down by its handle or header to close it, as on a phone.
+const panel = sheet.querySelector('.panel');
+let pull = null;
+panel.addEventListener('pointerdown', e => {
+  if (panel.scrollTop > 0 || !e.target.closest('.handle, .sh-head') || e.target.closest('button')) return;
+  pull = { y: e.clientY, id: e.pointerId, dy: 0 }; panel.setPointerCapture(e.pointerId); panel.style.transition = 'none';
+});
+panel.addEventListener('pointermove', e => { if (!pull || e.pointerId !== pull.id) return; pull.dy = Math.max(0, e.clientY - pull.y); panel.style.transform = `translateY(${pull.dy}px)`; });
+const endPull = e => {
+  if (!pull || e.pointerId !== pull.id) return;
+  const close = pull.dy > 90; pull = null;
+  panel.style.transition = REDUCED ? 'none' : 'transform .2s ease-out'; panel.style.transform = close ? 'translateY(100%)' : '';
+  if (close) setTimeout(() => { closeSheet(); panel.style.transform = ''; panel.style.transition = ''; }, REDUCED ? 0 : 200);
+};
+panel.addEventListener('pointerup', endPull);
+panel.addEventListener('pointercancel', endPull);
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (!$('langs').hidden && langChosen) closeModal('langs');

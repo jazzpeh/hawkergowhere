@@ -5,7 +5,7 @@ const LOCALE = { en: 'en-SG', zh: 'zh-SG', ms: 'ms-SG', ta: 'ta-SG' };
 let LANG = 'en';
 const I18N = {
   en: {
-    pickTitle: 'Choose your language', langBtn: 'EN', textSize: 'Text size', disclaimer: 'HawkerGoWhere is an independent concept, not a Singapore Government service.',
+    pickTitle: 'Choose your language', langBtn: 'EN', textSize: 'Text size', disclaimer: 'HawkerGoWhere is an independent concept, not a Singapore Government service.', tapDay: 'Tap a day to check', dayOpen: d => `${d}: open`, dayShut: (d, k) => `${d}: shut for ${k}`, dayUnsure: d => `${d}: dates not out yet, call first`, notOut: 'Dates not out',
     word: { open: 'Open', soon: 'Closing soon', closed: 'Closed', unknown: 'Not sure' },
     big: { closed: 'Closed lah', soon: 'Shutting soon', unknown: 'Not sure leh', open: 'Open!' },
     back: d => `Back ${d}`, shutFrom: d => `Shut from ${d}`, notListed: 'Not in the NEA list today', next: (k, d) => `Next ${k} ${d}`, noClosure: 'No closure listed',
@@ -39,7 +39,7 @@ const I18N = {
     spots: { empty: 'Paiseh, cannot find this one leh.', loading: 'Wait ah, pulling kopi…', far: 'You overseas ah?', good: 'Shiok, nothing closed here!' },
   },
   zh: {
-    pickTitle: '选择语言', langBtn: '中文', textSize: '字体大小', disclaimer: 'HawkerGoWhere 是独立的概念作品，不是新加坡政府的服务。',
+    pickTitle: '选择语言', langBtn: '中文', textSize: '字体大小', disclaimer: 'HawkerGoWhere 是独立的概念作品，不是新加坡政府的服务。', tapDay: '点日期查看', dayOpen: d => `${d}：营业`, dayShut: (d, k) => `${d}：${k}休息`, dayUnsure: d => `${d}：日期还没公布，先打电话`, notOut: '日期未公布',
     word: { open: '营业', soon: '即将休息', closed: '休息', unknown: '不确定' },
     big: { closed: '今天休息', soon: '快休息了', unknown: '不确定哦', open: '有开！' },
     back: d => `${d}恢复营业`, shutFrom: d => `${d}起休息`, notListed: '今天不在NEA名单上', next: (k, d) => `下次${k}：${d}`, noClosure: '没有休息日期',
@@ -73,7 +73,7 @@ const I18N = {
     spots: { empty: '不好意思，找不到哦。', loading: '等一下，正在拉咖啡…', far: '你在国外吗？', good: '爽，这里都没休息！' },
   },
   ms: {
-    pickTitle: 'Pilih bahasa', langBtn: 'BM', textSize: 'Saiz teks', disclaimer: 'HawkerGoWhere ialah konsep bebas, bukan perkhidmatan Kerajaan Singapura.',
+    pickTitle: 'Pilih bahasa', langBtn: 'BM', textSize: 'Saiz teks', disclaimer: 'HawkerGoWhere ialah konsep bebas, bukan perkhidmatan Kerajaan Singapura.', tapDay: 'Tekan tarikh untuk semak', dayOpen: d => `${d}: buka`, dayShut: (d, k) => `${d}: tutup (${k.toLowerCase()})`, dayUnsure: d => `${d}: tarikh belum keluar, telefon dulu`, notOut: 'Tarikh belum keluar',
     word: { open: 'Buka', soon: 'Akan tutup', closed: 'Tutup', unknown: 'Tak pasti' },
     big: { closed: 'Tutup lah', soon: 'Nak tutup', unknown: 'Tak pasti lah', open: 'Buka!' },
     back: d => `Buka semula ${d}`, shutFrom: d => `Tutup mulai ${d}`, notListed: 'Tiada dalam senarai NEA hari ini', next: (k, d) => `${k} seterusnya ${d}`, noClosure: 'Tiada tarikh tutup',
@@ -107,7 +107,7 @@ const I18N = {
     spots: { empty: 'Maaf, tak jumpa lah.', loading: 'Tunggu sekejap, tengah tarik kopi…', far: 'Awak di luar negara ke?', good: 'Best, semua buka di sini!' },
   },
   ta: {
-    pickTitle: 'மொழியைத் தேர்ந்தெடுக்கவும்', langBtn: 'தமிழ்', textSize: 'எழுத்து அளவு', disclaimer: 'HawkerGoWhere ஒரு சுயாதீனக் கருத்து; இது சிங்கப்பூர் அரசாங்கச் சேவை அல்ல.',
+    pickTitle: 'மொழியைத் தேர்ந்தெடுக்கவும்', langBtn: 'தமிழ்', textSize: 'எழுத்து அளவு', disclaimer: 'HawkerGoWhere ஒரு சுயாதீனக் கருத்து; இது சிங்கப்பூர் அரசாங்கச் சேவை அல்ல.', tapDay: 'சரிபார்க்க ஒரு நாளைத் தட்டவும்', dayOpen: d => `${d}: திறந்திருக்கும்`, dayShut: (d, k) => `${d}: மூடல் (${k})`, dayUnsure: d => `${d}: தேதிகள் இன்னும் வரவில்லை, அழைக்கவும்`, notOut: 'தேதிகள் வரவில்லை',
     word: { open: 'திறந்துள்ளது', soon: 'விரைவில் மூடல்', closed: 'மூடப்பட்டது', unknown: 'உறுதியில்லை' },
     big: { closed: 'இன்று மூடல்', soon: 'விரைவில் மூடல்', unknown: 'உறுதியில்லை', open: 'திறந்துள்ளது!' },
     back: d => `${d} மீண்டும் திறக்கும்`, shutFrom: d => `${d} முதல் மூடல்`, notListed: 'இன்று NEA பட்டியலில் இல்லை', next: (k, d) => `அடுத்த ${k}: ${d}`, noClosure: 'மூடல் தேதி இல்லை',
