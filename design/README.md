@@ -25,15 +25,17 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 
 ## Where things are
 
-- `prototype/page.html` is the whole prototype: tokens, components, verdict text, cast, spinner and state. `build.py` inlines the data and logo.
+- `prototype/page.html` is the whole prototype: tokens, components, cast, spinner and state. `prototype/i18n.js` holds every string in English, Chinese, Malay and Tamil, plus the uncle's lines and dish names. `build.py` inlines the data, the strings and the mark.
 - `prototype/make-data.ts` runs the real domain code (`scripts/parse.ts`, `src/domain/*`) over the fixture for 20 Oct and 7 Dec. Each centre also carries `shut` (its dated closures that end today or later) and `tbc` (quarters whose cleaning dates are not out yet) for the Board sheet.
-- `brand/` holds the four logo concepts. Peekaboo Shutter is the pick; Half-Shut reads best at 16px.
+- `brand/mark.svg` is the logo: a chilli disc with eyes peeking through the gap under a shutter. `brand/mark-icon.svg` is the 512px app icon. The wordmark is "uncle says **closed**" in lowercase Plus Jakarta Sans 800, with "closed" in chilli. The four earlier concepts stay in `brand/` for reference.
 - `decisions.tsv` is the decision log, one row per call.
 
 ## Design rules
 
 - Board is the design. The prototype has no other layouts.
 - White and simple. White page, ink `#16181D` text, grey `#5B6068` secondary text, hairlines `#E4E5E9`, soft fills `#F3F4F6` for search, chips and secondary buttons. Colour only where it means something: chilli `#D22A1D` closed, pandan `#1C7E53` open and the main action, kaya `#F6C343` closing soon and "Go here" (amber `#8F5600` when it is text on white), slate `#6A6F78` not sure. The one solid block on a screen is the verdict card; the "Go here" sign inside it is white. Teh, peranakan and sakura survive only inside the illustrations.
+- Language: on first open a full-screen chooser offers English, 中文, Bahasa Melayu and தமிழ் as big buttons; the choice is kept on the phone and the header's globe button changes it. Everything switches, dates included (via `Intl`, e.g. 12月9日周三, Rab, 9 Dis). Centre names stay in English because NEA publishes no translations. The verdict also shows the other three languages underneath. Chinese is the priority second language: at 70+ only 21% mainly speak English at home.
+- Text size: the A+ button beside the date steps through three sizes (x1, x1.15, x1.3) and is kept on the phone. Every font size in the stylesheet is `calc(Npx * var(--ts))`; the header's logo and language button stay fixed so they always fit.
 - One family for everything you read: Plus Jakarta Sans, including the verdict word and the uncle's line. Ma Shan Zheng only for Chinese, Noto Sans Tamil for Tamil. The wordmark is an SVG. No Bungee, no handwriting face.
 - Built for older users first: 17px body, nothing under 15px on the dark rows, tap targets 48px or more, centre names wrap instead of being cut off, every button says what it does in words, and nothing floats over the content.
 - The verdict carries all four official languages, English largest. The strings live in `PLACARD_TEXT` and need a native speaker before launch.
@@ -46,8 +48,8 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 ## Open items
 
 - Owner picked Board on 2026-10-29 and the other four layouts are gone (they live in git history before this change). Photos only appear at the bottom of the detail sheet, so the photo licence no longer blocks launch.
-- Owner: approve the design and the logo.
-- Native speaker check of the Malay, Chinese and Tamil placard strings.
+- Owner: approve the design and the new logo (mark C from the 2026-10-29 comparison).
+- Native speaker check of every Chinese, Malay and Tamil string in `prototype/i18n.js`.
 - Confirm the photo licence, or hotlink `nea.gov.sg` (it sends `cross-origin-resource-policy: cross-origin`) with an NEA credit.
 - Create a local `.env` with `DATA_GOV_SG_API_KEY` to verify the `x-api-key` header name.
 - Confirm GitHub Pages source is "GitHub Actions" before the first deploy.

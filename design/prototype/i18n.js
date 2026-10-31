@@ -5,7 +5,7 @@ const LOCALE = { en: 'en-SG', zh: 'zh-SG', ms: 'ms-SG', ta: 'ta-SG' };
 let LANG = 'en';
 const I18N = {
   en: {
-    pickTitle: 'Choose your language', langBtn: 'EN',
+    pickTitle: 'Choose your language', langBtn: 'EN', textSize: 'Text size',
     word: { open: 'Open', soon: 'Closing soon', closed: 'Closed', unknown: 'Not sure' },
     big: { closed: 'Closed lah', soon: 'Shutting soon', unknown: 'Not sure leh', open: 'Open!' },
     back: d => `Back ${d}`, shutFrom: d => `Shut from ${d}`, notListed: 'Not in the NEA list today', next: (k, d) => `Next ${k} ${d}`, noClosure: 'No closure listed',
@@ -39,7 +39,7 @@ const I18N = {
     spots: { empty: 'Paiseh, cannot find this one leh.', loading: 'Wait ah, pulling kopi…', far: 'You overseas ah?', good: 'Shiok, nothing closed here!' },
   },
   zh: {
-    pickTitle: '选择语言', langBtn: '中文',
+    pickTitle: '选择语言', langBtn: '中文', textSize: '字体大小',
     word: { open: '营业', soon: '即将休息', closed: '休息', unknown: '不确定' },
     big: { closed: '今天休息', soon: '快休息了', unknown: '不确定哦', open: '有开！' },
     back: d => `${d}恢复营业`, shutFrom: d => `${d}起休息`, notListed: '今天不在NEA名单上', next: (k, d) => `下次${k}：${d}`, noClosure: '没有休息日期',
@@ -73,7 +73,7 @@ const I18N = {
     spots: { empty: '不好意思，找不到哦。', loading: '等一下，正在拉咖啡…', far: '你在国外吗？', good: '爽，这里都没休息！' },
   },
   ms: {
-    pickTitle: 'Pilih bahasa', langBtn: 'BM',
+    pickTitle: 'Pilih bahasa', langBtn: 'BM', textSize: 'Saiz teks',
     word: { open: 'Buka', soon: 'Akan tutup', closed: 'Tutup', unknown: 'Tak pasti' },
     big: { closed: 'Tutup lah', soon: 'Nak tutup', unknown: 'Tak pasti lah', open: 'Buka!' },
     back: d => `Buka semula ${d}`, shutFrom: d => `Tutup mulai ${d}`, notListed: 'Tiada dalam senarai NEA hari ini', next: (k, d) => `${k} seterusnya ${d}`, noClosure: 'Tiada tarikh tutup',
@@ -107,7 +107,7 @@ const I18N = {
     spots: { empty: 'Maaf, tak jumpa lah.', loading: 'Tunggu sekejap, tengah tarik kopi…', far: 'Awak di luar negara ke?', good: 'Best, semua buka di sini!' },
   },
   ta: {
-    pickTitle: 'மொழியைத் தேர்ந்தெடுக்கவும்', langBtn: 'தமிழ்',
+    pickTitle: 'மொழியைத் தேர்ந்தெடுக்கவும்', langBtn: 'தமிழ்', textSize: 'எழுத்து அளவு',
     word: { open: 'திறந்துள்ளது', soon: 'விரைவில் மூடல்', closed: 'மூடப்பட்டது', unknown: 'உறுதியில்லை' },
     big: { closed: 'இன்று மூடல்', soon: 'விரைவில் மூடல்', unknown: 'உறுதியில்லை', open: 'திறந்துள்ளது!' },
     back: d => `${d} மீண்டும் திறக்கும்`, shutFrom: d => `${d} முதல் மூடல்`, notListed: 'இன்று NEA பட்டியலில் இல்லை', next: (k, d) => `அடுத்த ${k}: ${d}`, noClosure: 'மூடல் தேதி இல்லை',
@@ -125,7 +125,7 @@ const I18N = {
     nothing: 'இன்று எதுவும் மூடவில்லை. எங்கும் சாப்பிடலாம்!',
     headline: (c, s, busy) => `${busy ? 'ஐயோ! ' : ''}இன்று ${c} உணவங்காடி நிலையங்கள் மூடல், மேலும் ${s} விரைவில் மூடும்.`,
     near: 'அருகில் சாப்பிட இடம்', finding: 'உங்கள் இடத்தைத் தேடுகிறது…', showingNear: n => `உங்களுக்கு அருகிலுள்ள ${n}`, reset: 'மீட்டமை',
-    search: 'உணவங்காடி நிலையத்தைத் தேடுங்கள்', clear: 'அழி', try: 'முயற்சி',
+    search: 'தேடுங்கள்', clear: 'அழி', try: 'முயற்சி',
     groups: { chope: 'என் விருப்பம்', closed: 'இன்று மூடல்', soon: 'விரைவில் மூடல்', unknown: 'உறுதியில்லை, அழைக்கவும்', open: 'இன்று திறப்பு' },
     nearest: 'உங்களுக்கு அருகில்', seeAllN: n => `அனைத்தும் (${n})`, seeAllMatches: n => `அனைத்து ${n} முடிவுகள்`, seeAllCentres: n => `அனைத்து ${n} நிலையங்கள்`,
     emptyHint: 'Bedok அல்லது Tiong Bahru போன்ற சாலை அல்லது பகுதியை முயற்சிக்கவும்.', chopeHint: 'நீங்கள் வழக்கமாகச் செல்லும் நிலையத்தைச் சேமித்தால், அது முதலில் காட்டப்படும்.',
