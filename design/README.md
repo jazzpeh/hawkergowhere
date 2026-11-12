@@ -7,6 +7,7 @@ The approved direction for HawkerGoWhere (working name until 2026-10-31: Uncle S
 Both are private to the repo owner.
 
 - Playable prototype: https://claude.ai/artifact/A3xpXizGkpxnKZTcL8PC41
+- Case study for the GovTech pitch: https://claude.ai/artifact/Fnt44SFRHmLALCHQPhn5AC (source in `case-study/`, screenshots from the 7 Dec data)
 - Design canvas (round 1 options, logo concepts, mood board, final screens): https://claude.ai/artifact/4CvkHsJbG8dPtmHuKWVaYM
 
 ## Run the prototype locally
