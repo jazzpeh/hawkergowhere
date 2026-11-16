@@ -50,10 +50,9 @@ To republish the artifact, publish `out/uncle-says-closed.html` with `out/photos
 
 ## Open items
 
-- Owner picked Board on 2026-10-29 and the other four layouts are gone (they live in git history before this change). Photos only appear at the bottom of the detail sheet, so the photo licence no longer blocks launch.
-- Owner: approve the design and the new logo (mark C from the 2026-10-29 comparison).
-- Native speaker check of every Chinese, Malay and Tamil string in `prototype/i18n.js`.
-- Confirm the photo licence, or hotlink `nea.gov.sg` (it sends `cross-origin-resource-policy: cross-origin`) with an NEA credit.
-- Create a local `.env` with `DATA_GOV_SG_API_KEY` to verify the `x-api-key` header name.
-- Confirm GitHub Pages source is "GitHub Actions" before the first deploy.
-- After approval: codify as a Design System artifact, rebuild `src/` from it, update e2e, run an accessibility and Lighthouse pass, then a persona usability test.
+- Done 2026-11-16: `src/` rebuilt from this design (Board, four languages, A+, tap-a-day calendar), the repo renamed to `hawkergowhere`, GitHub Pages enabled, and the daily snapshot turned back on. The prototype and the app share `src/domain/view-model.ts`.
+- Owner: approve the design and the logo.
+- Native speaker check of every Chinese, Malay and Tamil string in `src/i18n.ts` (the prototype's copy is `prototype/i18n.js`).
+- Usability test with five residents aged 60 and over, on their own phones.
+- Accessibility and Lighthouse pass on the live site.
+- Confirm NEA is content for its centre photos to be hotlinked with credit.
