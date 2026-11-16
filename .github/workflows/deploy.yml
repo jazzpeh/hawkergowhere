@@ -3,16 +3,13 @@ name: Snapshot and deploy
 on:
   push:
     branches: [main]
-  # Daily refresh paused until Pages is enabled and the design is signed off.
-  # Restore to refresh at 05:00 Singapore time:
-  # schedule:
-  #   - cron: '0 21 * * *'
+  # Refresh NEA's closure dates every morning at 05:00 Singapore time.
+  schedule:
+    - cron: '0 21 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# No job gets a permission it does not ask for below.
+permissions: {}
 
 concurrency:
   group: pages
@@ -21,9 +18,14 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # Actions are pinned to the commit of a reviewed release, so a moved tag cannot change what runs.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -33,21 +35,33 @@ jobs:
       - run: npm test
       # e2e writes the fixture snapshot into public/data, so the live snapshot must come after it.
       - run: npm run e2e
+      # The API key reaches this step only, and the script sends it only to data.gov.sg.
       - run: npm run snapshot
         env:
           DATA_GOV_SG_API_KEY: ${{ secrets.DATA_GOV_SG_API_KEY }}
       - run: npm run build
       - run: test -s dist/index.html && test -s dist/data/centres.json
-      - uses: actions/upload-pages-artifact@v3
+      - name: Check the API key is not in the site
+        env:
+          KEY: ${{ secrets.DATA_GOV_SG_API_KEY }}
+        run: |
+          if [ -n "$KEY" ] && grep -rqF -- "$KEY" dist; then
+            echo "::error::The data.gov.sg API key appears in dist/. Nothing was deployed."
+            exit 1
+          fi
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

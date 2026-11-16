@@ -1,0 +1,229 @@
+// Every string the app shows, in the four official languages. Unverified: a native speaker must review zh / ms / ta before launch.
+// Centre names stay in English: NEA publishes no official translations. Dates come from Intl in the chosen locale.
+import type { Kind } from './ui/kind.ts'
+
+export type Lang = 'en' | 'zh' | 'ms' | 'ta'
+export const LANGS: Array<[Lang, string]> = [['en', 'English'], ['zh', '中文'], ['ms', 'Bahasa Melayu'], ['ta', 'தமிழ்']]
+export const LOCALE: Record<Lang, string> = { en: 'en-SG', zh: 'zh-SG', ms: 'ms-SG', ta: 'ta-SG' }
+export const isLang = (v: unknown): v is Lang => typeof v === 'string' && v in LOCALE
+
+type ShutKind = 'cleaning' | 'works'
+type Unit = 'd' | 'w' | 'm' | 'y'
+// One shape for every language, so a missing or misspelt key fails the type check.
+type Strings = {
+  pickTitle: string; langBtn: string; textSize: string; disclaimer: string; tapDay: string
+  dayOpen: (d: string) => string; dayShut: (d: string, k: string) => string; dayUnsure: (d: string) => string; notOut: string
+  geoOff: string; loadFail: string; asOf: (d: string) => string; loading: string
+  word: Record<Kind, string>; big: Record<Kind, string>
+  back: (d: string) => string; shutFrom: (d: string) => string; notListed: string; next: (k: string, d: string) => string; noClosure: string
+  whenBack: (d: string) => string; whenShuts: (d: string) => string; callFirst: string; open: string
+  shut: Record<ShutKind, string>; kindWord: Record<ShutKind, string>
+  stalls: (n: number, wet: boolean) => string; stallsNA: string; notice: string
+  choped: string; yourChope: string; today: string
+  goInstead: string; orGo: string; openKm: (km: number) => string; openToday: string
+  whenShutsH: string; shutKey: string; dow: string | string[]
+  since: (a: string, b: string) => string; range: (a: string, b: string) => string; more: (s: string) => string
+  span: (n: number, u: Unit) => string
+  tbc: (qs: string[], y: string) => string
+  noneSoon: string; noneAfter: string
+  photo: string; photoAlt: (n: string) => string
+  nothing: string; headline: (c: number, s: number, busy: boolean) => string
+  near: string; finding: string; showingNear: (n: number) => string; reset: string
+  search: string; clear: string; try: string
+  groups: Record<Kind | 'chope', string>
+  nearest: string; seeAllN: (n: number) => string; seeAllMatches: (n: number) => string; seeAllCentres: (n: number) => string
+  emptyHint: string; chopeHint: string; eat: string; farSub: string
+  backHome: string; countWord: (n: number, w: string) => string; matches: (n: number) => string; all: (n: number) => string
+  showing: (w: string) => string; clearFilter: (w: string) => string
+  chope: string; chopedBtn: string; share: string; copyLabel: string; fromYou: (d: string) => string; close: string
+  copied: string; selected: string; chopedToast: string; unchoped: string
+  shareText: { closed: (n: string, a: string) => string; soon: (n: string, d: string) => string; open: (n: string) => string; unknown: (n: string) => string }
+  eatTitle: string; tapStop: string; craving: (d: string) => string; hunt: string; again: string
+  quips: string[]
+  spots: Record<'empty' | 'loading' | 'far' | 'good', string>
+}
+
+let current: Lang = 'en'
+export const lang = (): Lang => current
+export const setLang = (l: Lang) => { current = l }
+// Dates in this year leave the year out.
+let thisYear = new Date().getUTCFullYear()
+export const setThisYear = (y: number) => { thisYear = y }
+
+const I18N: Record<Lang, Strings> = {
+  en: {
+    geoOff: 'Uncle cannot see where you are. Turn on location for this page, or search instead.', loadFail: 'Aiyoh, Uncle cannot load the closure list right now. Check your connection and refresh the page.', asOf: (d: string) => `Data as of ${d}`, loading: 'Uncle checking the list…',
+    pickTitle: 'Choose your language', langBtn: 'EN', textSize: 'Text size', disclaimer: 'HawkerGoWhere is an independent concept, not a Singapore Government service.', tapDay: 'Tap a day to check', dayOpen: d => `${d}: open`, dayShut: (d, k) => `${d}: shut for ${k}`, dayUnsure: d => `${d}: dates not out yet, call first`, notOut: 'Dates not out',
+    word: { open: 'Open', soon: 'Closing soon', closed: 'Closed', unknown: 'Not sure' },
+    big: { closed: 'Closed lah', soon: 'Shutting soon', unknown: 'Not sure leh', open: 'Open!' },
+    back: d => `Back ${d}`, shutFrom: d => `Shut from ${d}`, notListed: 'Not in the NEA list today', next: (k, d) => `Next ${k} ${d}`, noClosure: 'No closure listed',
+    whenBack: d => `Back ${d}`, whenShuts: d => `Shuts ${d}`, callFirst: 'Call first', open: 'Open',
+    shut: { cleaning: 'Cleaning', works: 'Renovation' }, kindWord: { cleaning: 'cleaning', works: 'renovation' },
+    stalls: (n, wet) => `${n} food stalls${wet ? ' · wet market' : ''}`, stallsNA: 'Stall count not listed', notice: 'NEA notice',
+    choped: 'choped', yourChope: 'Your chope', today: 'Today',
+    goInstead: 'Go here instead', orGo: 'Or go here', openKm: km => `Open today · ${km} km away`, openToday: 'Open today',
+    whenShutsH: 'When Uncle shuts', shutKey: 'Shut', dow: 'MTWTFSS',
+    since: (a, b) => `Since ${a} · back ${b}`, range: (a, b) => `${a} to ${b}`, more: s => `${s} more`,
+    span: (n, u) => `${n} ${{ d: n === 1 ? 'day' : 'days', w: 'weeks', m: 'months', y: 'years' }[u]}`,
+    tbc: (qs, y) => `Cleaning dates for ${qs.join(' and ')} ${y} not out yet. Call before you go.`,
+    noneSoon: 'Nothing shut in the next five weeks.', noneAfter: 'No closure listed after today.',
+    photo: 'Photo: NEA', photoAlt: n => `Photo of ${n}`,
+    nothing: 'Today nothing closed. Makan anywhere, shiok!',
+    headline: (c, s, busy) => `${busy ? 'Alamak! ' : ''}Today ${c} centre${c === 1 ? '' : 's'} closed, ${s} more closing soon.`,
+    near: 'Find makan near me', finding: 'Uncle finding you…', showingNear: n => `Showing the ${n} nearest to you`, reset: 'Reset',
+    search: 'Search hawker centre', clear: 'Clear search', try: 'Try',
+    groups: { chope: 'Your chope', closed: 'Closed today', soon: 'Closing soon', unknown: 'Not sure, call first', open: 'Open today' },
+    nearest: 'Nearest to you', seeAllN: n => `See all ${n}`, seeAllMatches: n => `See all ${n} matches`, seeAllCentres: n => `See all ${n} centres`,
+    emptyHint: 'Try a road or estate, like Bedok or Tiong Bahru.', chopeHint: 'Chope your usual centre and Uncle answers it first.',
+    eat: 'Eat where ah? Let Uncle pick', farSub: "Showing today's closures for all of Singapore.",
+    backHome: 'Back to today', countWord: (n, w) => `${n} ${w.toLowerCase()}`, matches: n => `${n} matches`, all: n => `All ${n} centres`,
+    showing: w => `Showing: ${w}`, clearFilter: w => `Clear filter: ${w}`,
+    chope: 'Chope this centre', chopedBtn: 'Choped', share: 'Tell my kakis', copyLabel: 'Copy this and send to your kakis', fromYou: d => `${d} from you`, close: 'Close',
+    copied: 'Copied, send it to your kakis', selected: 'Text selected. Copy it and send to your kakis', chopedToast: 'Choped! Tissue on the table liao.', unchoped: 'Unchoped.',
+    shareText: { closed: (n, a) => `Uncle says ${n} closed today, go ${a} instead lah`, soon: (n, d) => `Uncle says ${n} closing ${d}, makan there before that lah`, open: n => `Uncle says ${n} open today. Makan there?`, unknown: n => `Uncle not sure if ${n} open today, better call first` },
+    eatTitle: 'Eat where ah?', tapStop: 'Tap anywhere to stop', craving: d => `Craving ${d.toLowerCase()}?`, hunt: 'Go here and hunt for it', again: 'Spin again',
+    quips: ['Can! Go makan there lah.', 'Shiok choice, confirm open.', 'Boleh! Go go go.', "Don't paiseh, just go.", 'Tapau also can.'],
+    spots: { empty: 'Paiseh, cannot find this one leh.', loading: 'Wait ah, pulling kopi…', far: 'You overseas ah?', good: 'Shiok, nothing closed here!' },
+  },
+  zh: {
+    geoOff: 'Uncle 看不到你的位置。请允许这个网页使用位置，或者直接搜索。', loadFail: '哎哟，现在载入不到休息名单。请检查网络后重新整理网页。', asOf: (d: string) => `资料更新于 ${d}`, loading: '正在查名单…',
+    pickTitle: '选择语言', langBtn: '中文', textSize: '字体大小', disclaimer: 'HawkerGoWhere 是独立的概念作品，不是新加坡政府的服务。', tapDay: '点日期查看', dayOpen: d => `${d}：营业`, dayShut: (d, k) => `${d}：${k}休息`, dayUnsure: d => `${d}：日期还没公布，先打电话`, notOut: '日期未公布',
+    word: { open: '营业', soon: '即将休息', closed: '休息', unknown: '不确定' },
+    big: { closed: '今天休息', soon: '快休息了', unknown: '不确定哦', open: '有开！' },
+    back: d => `${d}恢复营业`, shutFrom: d => `${d}起休息`, notListed: '今天不在NEA名单上', next: (k, d) => `下次${k}：${d}`, noClosure: '没有休息日期',
+    whenBack: d => `${d}开`, whenShuts: d => `${d}休息`, callFirst: '先打电话', open: '营业',
+    shut: { cleaning: '清洗', works: '装修' }, kindWord: { cleaning: '清洗', works: '装修' },
+    stalls: (n, wet) => `${n}个熟食摊位${wet ? ' · 湿巴刹' : ''}`, stallsNA: '摊位数量未列出', notice: 'NEA通告',
+    choped: '已占位', yourChope: '我的占位', today: '今天',
+    goInstead: '改去这里', orGo: '或者去这里', openKm: km => `今天营业 · ${km}公里`, openToday: '今天营业',
+    whenShutsH: '休息日期', shutKey: '休息', dow: '一二三四五六日',
+    since: (a, b) => `${a}起 · ${b}恢复`, range: (a, b) => `${a}至${b}`, more: s => `还有${s}`,
+    span: (n, u) => `${n}${{ d: '天', w: '周', m: '个月', y: '年' }[u]}`,
+    tbc: (qs, y) => `${y}年${qs.join('和')}的清洗日期还没公布，去之前先打电话。`,
+    noneSoon: '未来五周没有休息。', noneAfter: '今天之后没有休息日期。',
+    photo: '照片：NEA', photoAlt: n => `${n}的照片`,
+    nothing: '今天没有休息的，随便吃，爽！',
+    headline: (c, s, busy) => `${busy ? '哎呀！' : ''}今天${c}个小贩中心休息，另有${s}个即将休息。`,
+    near: '找附近的小贩中心', finding: '正在找你的位置…', showingNear: n => `显示离你最近的${n}个`, reset: '重设',
+    search: '搜索小贩中心', clear: '清除', try: '试试',
+    groups: { chope: '我的占位', closed: '今天休息', soon: '即将休息', unknown: '不确定，先打电话', open: '今天营业' },
+    nearest: '离你最近', seeAllN: n => `查看全部${n}个`, seeAllMatches: n => `查看全部${n}个结果`, seeAllCentres: n => `查看全部${n}个中心`,
+    emptyHint: '试试路名或地区，例如 Bedok 或 Tiong Bahru。', chopeHint: '占位你常去的中心，Uncle 会先告诉你。',
+    eat: '吃哪里好？让 Uncle 选', farSub: '显示全新加坡今天的休息名单。',
+    backHome: '返回', countWord: (n, w) => `${n}个${w}`, matches: n => `${n}个结果`, all: n => `全部${n}个中心`,
+    showing: w => `显示：${w}`, clearFilter: w => `清除筛选：${w}`,
+    chope: '占位这个中心', chopedBtn: '已占位', share: '告诉朋友', copyLabel: '复制并发给朋友', fromYou: d => `离你${d}`, close: '关闭',
+    copied: '已复制，发给朋友吧', selected: '已选好文字，复制后发给朋友', chopedToast: '占好位了！纸巾放桌上了。', unchoped: '已取消占位。',
+    shareText: { closed: (n, a) => `Uncle 说 ${n} 今天休息，改去 ${a} 吧`, soon: (n, d) => `Uncle 说 ${n} ${d}开始休息，之前去吃吧`, open: n => `Uncle 说 ${n} 今天有开，去吃吗？`, unknown: n => `Uncle 不确定 ${n} 今天有没有开，先打电话吧` },
+    eatTitle: '吃哪里好？', tapStop: '点任何地方停下', craving: d => `想吃${d}吗？`, hunt: '去这里找找看', again: '再转一次',
+    quips: ['可以！去吃吧。', '好选择，确定有开。', '走走走！', '不要客气，去吧。', '打包也可以。'],
+    spots: { empty: '不好意思，找不到哦。', loading: '等一下，正在拉咖啡…', far: '你在国外吗？', good: '爽，这里都没休息！' },
+  },
+  ms: {
+    geoOff: 'Uncle tak nampak lokasi anda. Benarkan lokasi untuk halaman ini, atau cari sahaja.', loadFail: 'Alamak, senarai penutupan tak dapat dimuatkan sekarang. Semak sambungan dan muat semula halaman.', asOf: (d: string) => `Data setakat ${d}`, loading: 'Uncle sedang semak senarai…',
+    pickTitle: 'Pilih bahasa', langBtn: 'BM', textSize: 'Saiz teks', disclaimer: 'HawkerGoWhere ialah konsep bebas, bukan perkhidmatan Kerajaan Singapura.', tapDay: 'Tekan tarikh untuk semak', dayOpen: d => `${d}: buka`, dayShut: (d, k) => `${d}: tutup (${k.toLowerCase()})`, dayUnsure: d => `${d}: tarikh belum keluar, telefon dulu`, notOut: 'Tarikh belum keluar',
+    word: { open: 'Buka', soon: 'Akan tutup', closed: 'Tutup', unknown: 'Tak pasti' },
+    big: { closed: 'Tutup lah', soon: 'Nak tutup', unknown: 'Tak pasti lah', open: 'Buka!' },
+    back: d => `Buka semula ${d}`, shutFrom: d => `Tutup mulai ${d}`, notListed: 'Tiada dalam senarai NEA hari ini', next: (k, d) => `${k} seterusnya ${d}`, noClosure: 'Tiada tarikh tutup',
+    whenBack: d => `Buka ${d}`, whenShuts: d => `Tutup ${d}`, callFirst: 'Telefon dulu', open: 'Buka',
+    shut: { cleaning: 'Pembersihan', works: 'Ubah suai' }, kindWord: { cleaning: 'Pembersihan', works: 'Ubah suai' },
+    stalls: (n, wet) => `${n} gerai makanan${wet ? ' · pasar basah' : ''}`, stallsNA: 'Bilangan gerai tidak disenaraikan', notice: 'Notis NEA',
+    choped: 'sudah cop', yourChope: 'Cop saya', today: 'Hari ini',
+    goInstead: 'Pergi sini pula', orGo: 'Atau pergi sini', openKm: km => `Buka hari ini · ${km} km`, openToday: 'Buka hari ini',
+    whenShutsH: 'Bila tutup', shutKey: 'Tutup', dow: 'ISRKJSA',
+    since: (a, b) => `Sejak ${a} · buka ${b}`, range: (a, b) => `${a} hingga ${b}`, more: s => `${s} lagi`,
+    span: (n, u) => `${n} ${{ d: 'hari', w: 'minggu', m: 'bulan', y: 'tahun' }[u]}`,
+    tbc: (qs, y) => `Tarikh pembersihan ${qs.join(' dan ')} ${y} belum keluar. Telefon dulu sebelum pergi.`,
+    noneSoon: 'Tiada penutupan dalam lima minggu akan datang.', noneAfter: 'Tiada tarikh tutup selepas hari ini.',
+    photo: 'Foto: NEA', photoAlt: n => `Foto ${n}`,
+    nothing: 'Hari ini semua buka. Makan mana-mana, best!',
+    headline: (c, s, busy) => `${busy ? 'Alamak! ' : ''}Hari ini ${c} pusat penjaja tutup, ${s} lagi akan tutup.`,
+    near: 'Cari makan dekat saya', finding: 'Uncle sedang cari lokasi anda…', showingNear: n => `Menunjukkan ${n} yang terdekat`, reset: 'Set semula',
+    search: 'Cari pusat penjaja', clear: 'Padam', try: 'Cuba',
+    groups: { chope: 'Cop saya', closed: 'Tutup hari ini', soon: 'Akan tutup', unknown: 'Tak pasti, telefon dulu', open: 'Buka hari ini' },
+    nearest: 'Paling dekat', seeAllN: n => `Lihat semua ${n}`, seeAllMatches: n => `Lihat semua ${n} hasil`, seeAllCentres: n => `Lihat semua ${n} pusat`,
+    emptyHint: 'Cuba nama jalan atau kawasan, seperti Bedok atau Tiong Bahru.', chopeHint: 'Cop pusat biasa anda, Uncle akan jawab dulu.',
+    eat: 'Makan mana? Biar Uncle pilih', farSub: 'Menunjukkan penutupan hari ini di seluruh Singapura.',
+    backHome: 'Kembali', countWord: (n, w) => `${n} ${w.toLowerCase()}`, matches: n => `${n} hasil`, all: n => `Semua ${n} pusat`,
+    showing: w => `Tunjuk: ${w}`, clearFilter: w => `Padam penapis: ${w}`,
+    chope: 'Cop pusat ini', chopedBtn: 'Sudah cop', share: 'Beritahu kawan', copyLabel: 'Salin dan hantar kepada kawan', fromYou: d => `${d} dari anda`, close: 'Tutup',
+    copied: 'Sudah disalin, hantar kepada kawan', selected: 'Teks dipilih. Salin dan hantar kepada kawan', chopedToast: 'Sudah cop! Tisu atas meja.', unchoped: 'Cop dibatalkan.',
+    shareText: { closed: (n, a) => `Uncle kata ${n} tutup hari ini, pergi ${a} pula lah`, soon: (n, d) => `Uncle kata ${n} tutup mulai ${d}, makan sebelum itu lah`, open: n => `Uncle kata ${n} buka hari ini. Jom makan?`, unknown: n => `Uncle tak pasti ${n} buka hari ini, telefon dulu` },
+    eatTitle: 'Makan mana?', tapStop: 'Tekan di mana-mana untuk berhenti', craving: d => `Teringin ${d.toLowerCase()}?`, hunt: 'Pergi sini dan cari', again: 'Putar lagi',
+    quips: ['Boleh! Pergi makan.', 'Pilihan best, confirm buka.', 'Jom jom jom!', 'Jangan malu, pergi saja.', 'Bungkus pun boleh.'],
+    spots: { empty: 'Maaf, tak jumpa lah.', loading: 'Tunggu sekejap, tengah tarik kopi…', far: 'Awak di luar negara ke?', good: 'Best, semua buka di sini!' },
+  },
+  ta: {
+    geoOff: 'உங்கள் இடம் தெரியவில்லை. இந்தப் பக்கத்துக்கு இடத்தை அனுமதிக்கவும், அல்லது தேடவும்.', loadFail: 'ஐயோ, மூடல் பட்டியலை இப்போது ஏற்ற முடியவில்லை. இணைப்பைச் சரிபார்த்து பக்கத்தைப் புதுப்பிக்கவும்.', asOf: (d: string) => `தரவு: ${d}`, loading: 'பட்டியலைச் சரிபார்க்கிறது…',
+    pickTitle: 'மொழியைத் தேர்ந்தெடுக்கவும்', langBtn: 'தமிழ்', textSize: 'எழுத்து அளவு', disclaimer: 'HawkerGoWhere ஒரு சுயாதீனக் கருத்து; இது சிங்கப்பூர் அரசாங்கச் சேவை அல்ல.', tapDay: 'சரிபார்க்க ஒரு நாளைத் தட்டவும்', dayOpen: d => `${d}: திறந்திருக்கும்`, dayShut: (d, k) => `${d}: மூடல் (${k})`, dayUnsure: d => `${d}: தேதிகள் இன்னும் வரவில்லை, அழைக்கவும்`, notOut: 'தேதிகள் வரவில்லை',
+    word: { open: 'திறந்துள்ளது', soon: 'விரைவில் மூடல்', closed: 'மூடப்பட்டது', unknown: 'உறுதியில்லை' },
+    big: { closed: 'இன்று மூடல்', soon: 'விரைவில் மூடல்', unknown: 'உறுதியில்லை', open: 'திறந்துள்ளது!' },
+    back: d => `${d} மீண்டும் திறக்கும்`, shutFrom: d => `${d} முதல் மூடல்`, notListed: 'இன்று NEA பட்டியலில் இல்லை', next: (k, d) => `அடுத்த ${k}: ${d}`, noClosure: 'மூடல் தேதி இல்லை',
+    whenBack: d => `${d} திறப்பு`, whenShuts: d => `${d} மூடல்`, callFirst: 'முதலில் அழைக்கவும்', open: 'திறப்பு',
+    shut: { cleaning: 'சுத்தம்', works: 'புதுப்பிப்பு' }, kindWord: { cleaning: 'சுத்தம்', works: 'புதுப்பிப்பு' },
+    stalls: (n, wet) => `${n} உணவுக் கடைகள்${wet ? ' · ஈரச் சந்தை' : ''}`, stallsNA: 'கடை எண்ணிக்கை இல்லை', notice: 'NEA அறிவிப்பு',
+    choped: 'சேமிக்கப்பட்டது', yourChope: 'என் விருப்பம்', today: 'இன்று',
+    goInstead: 'இங்கே செல்லுங்கள்', orGo: 'அல்லது இங்கே செல்லுங்கள்', openKm: km => `இன்று திறப்பு · ${km} கி.மீ.`, openToday: 'இன்று திறப்பு',
+    whenShutsH: 'மூடும் நாட்கள்', shutKey: 'மூடல்', dow: ['தி', 'செ', 'பு', 'வி', 'வெ', 'ச', 'ஞா'],
+    since: (a, b) => `${a} முதல் · ${b} திறப்பு`, range: (a, b) => `${a} முதல் ${b} வரை`, more: s => `இன்னும் ${s}`,
+    span: (n, u) => `${n} ${{ d: 'நாள்', w: 'வாரம்', m: 'மாதம்', y: 'ஆண்டு' }[u]}`,
+    tbc: (qs, y) => `${y} ${qs.join(', ')} சுத்தம் செய்யும் தேதிகள் இன்னும் வெளியாகவில்லை. செல்லும் முன் அழைக்கவும்.`,
+    noneSoon: 'அடுத்த ஐந்து வாரங்களில் மூடல் இல்லை.', noneAfter: 'இன்றைக்குப் பிறகு மூடல் இல்லை.',
+    photo: 'படம்: NEA', photoAlt: n => `${n} படம்`,
+    nothing: 'இன்று எதுவும் மூடவில்லை. எங்கும் சாப்பிடலாம்!',
+    headline: (c, s, busy) => `${busy ? 'ஐயோ! ' : ''}இன்று ${c} உணவங்காடி நிலையங்கள் மூடல், மேலும் ${s} விரைவில் மூடும்.`,
+    near: 'அருகில் சாப்பிட இடம்', finding: 'உங்கள் இடத்தைத் தேடுகிறது…', showingNear: n => `உங்களுக்கு அருகிலுள்ள ${n}`, reset: 'மீட்டமை',
+    search: 'தேடுங்கள்', clear: 'அழி', try: 'முயற்சி',
+    groups: { chope: 'என் விருப்பம்', closed: 'இன்று மூடல்', soon: 'விரைவில் மூடல்', unknown: 'உறுதியில்லை, அழைக்கவும்', open: 'இன்று திறப்பு' },
+    nearest: 'உங்களுக்கு அருகில்', seeAllN: n => `அனைத்தும் (${n})`, seeAllMatches: n => `அனைத்து ${n} முடிவுகள்`, seeAllCentres: n => `அனைத்து ${n} நிலையங்கள்`,
+    emptyHint: 'Bedok அல்லது Tiong Bahru போன்ற சாலை அல்லது பகுதியை முயற்சிக்கவும்.', chopeHint: 'நீங்கள் வழக்கமாகச் செல்லும் நிலையத்தைச் சேமித்தால், அது முதலில் காட்டப்படும்.',
+    eat: 'எங்கே சாப்பிடலாம்? Uncle தேர்வு செய்யட்டும்', farSub: 'சிங்கப்பூர் முழுவதும் இன்றைய மூடல்கள்.',
+    backHome: 'திரும்பு', countWord: (n, w) => `${n} ${w}`, matches: n => `${n} முடிவுகள்`, all: n => `அனைத்து ${n} நிலையங்கள்`,
+    showing: w => `காட்டுவது: ${w}`, clearFilter: w => `வடிகட்டியை அழி: ${w}`,
+    chope: 'இதைச் சேமி', chopedBtn: 'சேமிக்கப்பட்டது', share: 'நண்பர்களிடம் சொல்', copyLabel: 'நகலெடுத்து நண்பர்களுக்கு அனுப்புங்கள்', fromYou: d => `உங்களிடமிருந்து ${d}`, close: 'மூடு',
+    copied: 'நகலெடுக்கப்பட்டது, நண்பர்களுக்கு அனுப்புங்கள்', selected: 'உரை தேர்ந்தெடுக்கப்பட்டது. நகலெடுத்து அனுப்புங்கள்', chopedToast: 'சேமிக்கப்பட்டது!', unchoped: 'நீக்கப்பட்டது.',
+    shareText: { closed: (n, a) => `${n} இன்று மூடப்பட்டுள்ளது, ${a} செல்லுங்கள்`, soon: (n, d) => `${n} ${d} முதல் மூடப்படும், அதற்கு முன் சாப்பிடுங்கள்`, open: n => `${n} இன்று திறந்துள்ளது. சாப்பிடப் போகலாமா?`, unknown: n => `${n} இன்று திறந்துள்ளதா என்று உறுதியில்லை, முதலில் அழைக்கவும்` },
+    eatTitle: 'எங்கே சாப்பிடலாம்?', tapStop: 'நிறுத்த எங்கும் தட்டவும்', craving: d => `${d} சாப்பிட ஆசையா?`, hunt: 'இங்கே சென்று தேடுங்கள்', again: 'மீண்டும் சுழற்று',
+    quips: ['சரி! சாப்பிடப் போங்கள்.', 'நல்ல தேர்வு, திறந்துள்ளது.', 'போகலாம்!', 'தயங்காமல் போங்கள்.', 'பார்சல் வாங்கலாம்.'],
+    spots: { empty: 'மன்னிக்கவும், கிடைக்கவில்லை.', loading: 'சற்று பொறுங்கள்…', far: 'நீங்கள் வெளிநாட்டிலா?', good: 'அருமை, இங்கு எதுவும் மூடவில்லை!' },
+  },
+};
+
+// Dish names for the spinner, in WHEEL order.
+export const DISHES: Record<Lang, string[]> = {
+  en: ['Chicken rice', 'Laksa', 'Satay', 'Nasi lemak', 'Roti prata', 'Thosai', 'Kaya toast', 'Ice kachang', 'Mee rebus'],
+  zh: ['鸡饭', '叻沙', '沙爹', '椰浆饭', '印度煎饼', '印度薄饼', '咖椰吐司', '红豆冰', '马来卤面'],
+  ms: ['Nasi ayam', 'Laksa', 'Sate', 'Nasi lemak', 'Roti prata', 'Tosai', 'Roti kaya', 'Ais kacang', 'Mee rebus'],
+  ta: ['சிக்கன் ரைஸ்', 'லக்சா', 'சாத்தே', 'நாசி லெமாக்', 'ரொட்டி பிராட்டா', 'தோசை', 'காயா டோஸ்ட்', 'ஐஸ் கச்சாங்', 'மீ ரெபுஸ்'],
+};
+
+const LINES: Record<Exclude<Lang, 'en'>, Record<Kind, (name: string, date: string) => string>> = {
+  zh: { closed: (n, d) => `哎哟，${n}今天休息，${d}才开。`, soon: (n, d) => `${n}现在有开，${d}开始休息，快去吃！`, unknown: n => `${n}的清洗日期还没公布，去之前先打电话。`, open: n => `${n}今天有开！快去占位。` },
+  ms: { closed: (n, d) => `Alamak, ${n} tutup hari ini. Buka semula ${d}.`, soon: (n, d) => `${n} buka sekarang, tapi tutup mulai ${d}. Pergi makan dulu!`, unknown: n => `Tarikh pembersihan ${n} belum keluar. Telefon dulu sebelum pergi.`, open: n => `${n} buka hari ini! Pergi cepat, cop tempat.` },
+  ta: { closed: (n, d) => `ஐயோ, ${n} இன்று மூடப்பட்டுள்ளது. ${d} மீண்டும் திறக்கும்.`, soon: (n, d) => `${n} இப்போது திறந்துள்ளது, ${d} முதல் மூடப்படும். சீக்கிரம் சாப்பிடுங்கள்!`, unknown: n => `${n} சுத்தம் செய்யும் தேதிகள் இன்னும் வெளியாகவில்லை. செல்லும் முன் அழைக்கவும்.`, open: n => `${n} இன்று திறந்துள்ளது! சீக்கிரம் போய் இடம் பிடியுங்கள்.` },
+};
+
+// English keeps the domain's own line; the other languages build theirs from the same status.
+export const localLine = (l: Exclude<Lang, 'en'>, k: Kind, name: string, date: string) => LINES[l][k](name, date)
+
+export function t<K extends keyof Strings>(k: K): Strings[K] {
+  return I18N[current][k]
+}
+
+const DFMT = new Map<string, Intl.DateTimeFormat>()
+const EN_DOW = 'Sun Mon Tue Wed Thu Fri Sat'.split(' ')
+const EN_MON = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')
+// `dow` adds the weekday; a year other than this one is always shown.
+export function fmtDate(ymd: string, dow = true): string {
+  const [y = 0, m = 1, d = 1] = ymd.split('-').map(Number)
+  const when = new Date(Date.UTC(y, m - 1, d)), yr = y !== thisYear
+  if (current === 'en') return `${dow ? `${EN_DOW[when.getUTCDay()]} ` : ''}${d} ${EN_MON[m - 1]}${yr ? ` ${y}` : ''}`
+  const key = `${current}${dow}${yr}`
+  let f = DFMT.get(key)
+  if (!f) {
+    f = new Intl.DateTimeFormat(LOCALE[current], { timeZone: 'UTC', day: 'numeric', month: 'short', ...(dow ? { weekday: 'short' } : {}), ...(yr ? { year: 'numeric' } : {}) })
+    DFMT.set(key, f)
+  }
+  return f.format(when)
+}
+export const monthShort = (m: number) => current === 'en' ? EN_MON[m - 1] ?? '' : new Intl.DateTimeFormat(LOCALE[current], { timeZone: 'UTC', month: 'short' }).format(new Date(Date.UTC(2026, m - 1, 1)))
