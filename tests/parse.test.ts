@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { parseClosuresCsv } from '../scripts/parse.ts'
+import { neaPhoto, parseClosuresCsv } from '../scripts/parse.ts'
 import { centreNamed, centres, FIXTURE_PATH } from './fixture.ts'
 
 const countKind = (kind: string) => centres.flatMap(c => c.closures).filter(c => c.kind === kind).length
@@ -50,5 +50,17 @@ describe('parseClosuresCsv errors', () => {
     const header = lines[0]
     const adam = lines.find(l => l.includes('Adam Road Food Centre'))
     expect(() => parseClosuresCsv([header, adam, adam].join('\n'))).toThrow('duplicate centre id "adam-road-food-centre"')
+  })
+})
+
+describe('neaPhoto', () => {
+  it('upgrades NEA photo links to https', () => {
+    expect(neaPhoto('http://www.nea.gov.sg/images/a.jpg')).toBe('https://www.nea.gov.sg/images/a.jpg')
+    expect(neaPhoto(' https://www.nea.gov.sg/images/a.jpg ')).toBe('https://www.nea.gov.sg/images/a.jpg')
+  })
+  it('drops anything that is not on www.nea.gov.sg', () => {
+    for (const raw of ['', 'nil', 'NA', 'https://evil.example/a.jpg', 'https://www.nea.gov.sg.evil.example/a.jpg', 'javascript:alert(1)', 'ftp://www.nea.gov.sg/a.jpg']) {
+      expect(neaPhoto(raw)).toBeUndefined()
+    }
   })
 })

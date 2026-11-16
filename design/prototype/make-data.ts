@@ -1,27 +1,15 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { parseClosuresCsv } from '../../scripts/parse.ts'
-import { statusOn, nearestOpen } from '../../src/domain/status.ts'
-import { uncleSays } from '../../src/domain/uncle.ts'
+import { toView } from '../../src/domain/view-model.ts'
 import type { IsoDate } from '../../src/domain/types.ts'
 
 const here = new URL('.', import.meta.url)
 const centres = parseClosuresCsv(readFileSync(new URL('../../scripts/fixtures/closures-2026-10-20.csv', here), 'utf8'))
+const description = new Map(centres.map(c => [c.id, c.description]))
 const out: Record<string, unknown> = {}
 for (const day of ['2026-10-20', '2026-12-07'] as IsoDate[]) {
-  out[day] = centres.map(c => {
-    const status = statusOn(c, day)
-    const alt = status.kind === 'open' ? undefined : nearestOpen(centres, c, day, c.id)
-    const remarks = c.closures.flatMap(x => ('remarks' in x && x.remarks ? [x.remarks] : []))
-    // The rest of the schedule from today, for the Board sheet's calendar.
-    const shut = c.closures.flatMap(x => (x.kind !== 'tbc' && x.end >= day ? [{ kind: x.kind, start: x.start, end: x.end }] : []))
-      .sort((a, b) => a.start.localeCompare(b.start))
-    const tbc = c.closures.flatMap(x => (x.kind === 'tbc' ? [x.quarter] : []))
-    // Quarters whose cleaning dates are out, as '2026-4'. A day outside them cannot be called open.
-    const known = [...new Set(c.closures.flatMap(x => (x.kind === 'cleaning' ? [`${x.start.slice(0, 4)}-${x.quarter}`] : [])))]
-    return { id: c.id, name: c.name, address: c.address, lat: c.lat, lng: c.lng, foodStalls: c.foodStalls, description: c.description,
-      status, line: uncleSays(status, c, () => 0), remarks, shut, tbc, known,
-      alt: alt && { id: alt.centre.id, name: alt.centre.name, km: Math.round(alt.km * 10) / 10 } }
-  })
+  // The same view the app builds, plus the description the prototype still reads its market stall count from.
+  out[day] = toView(centres, day, () => 0).map(v => ({ ...v, description: description.get(v.id) ?? '' }))
 }
 mkdirSync(new URL('out/', here), { recursive: true })
 writeFileSync(new URL('out/data.js', here), 'window.DATA = ' + JSON.stringify(out) + ';')

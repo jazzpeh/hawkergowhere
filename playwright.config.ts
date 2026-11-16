@@ -11,7 +11,8 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'npm run snapshot:fixture && npx vite --port 4173 --strictPort',
+    // The production build, so the Content Security Policy is tested exactly as deployed.
+    command: 'npm run snapshot:fixture && npx vite build && npx vite preview --port 4173 --strictPort',
     url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
   },

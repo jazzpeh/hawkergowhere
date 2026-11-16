@@ -80,8 +80,20 @@ function parseRow(row: Row): Centre {
     foodStalls: parseNumber(name, 'no_of_food_stalls', row.no_of_food_stalls ?? ''),
     marketStalls: parseNumber(name, 'no_of_market_stalls', row.no_of_market_stalls ?? ''),
     description: (row.description_myenv ?? '').trim(),
-    ...(photo === '' || photo.toLowerCase() === 'nil' || photo === 'NA' ? {} : { photoUrl: photo }),
+    ...(neaPhoto(photo) ? { photoUrl: neaPhoto(photo) } : {}),
     closures: [...QUARTERS.map(q => cleaningClosure(name, row, q)), ...(works ? [works] : [])],
+  }
+}
+
+// Photos load straight from NEA, so only NEA's own site is accepted, upgraded to https; anything else in the column is dropped.
+export function neaPhoto(raw: string): string | undefined {
+  try {
+    const url = new URL(raw.trim())
+    if (url.hostname !== 'www.nea.gov.sg' || !['http:', 'https:'].includes(url.protocol)) return undefined
+    url.protocol = 'https:'
+    return url.href
+  } catch {
+    return undefined
   }
 }
 

@@ -9,7 +9,7 @@ const OUTPUT = 'public/data/centres.json'
 const MAX_ATTEMPTS = 6
 
 function headers(): Record<string, string> {
-  const h: Record<string, string> = { 'User-Agent': 'uncle-says-closed' }
+  const h: Record<string, string> = { 'User-Agent': 'hawkergowhere' }
   const key = process.env.DATA_GOV_SG_API_KEY
   if (key) h['x-api-key'] = key
   else console.warn('warning: DATA_GOV_SG_API_KEY not set, requesting without a key')
@@ -46,7 +46,7 @@ async function downloadCsv(): Promise<string> {
   const poll = JSON.parse(await fetchText(POLL_URL, headers())) as { data?: { url?: string } }
   const url = poll.data?.url
   if (!url) throw new Error('poll-download response has no data.url')
-  return fetchText(url, { 'User-Agent': 'uncle-says-closed' })
+  return fetchText(url, { 'User-Agent': 'hawkergowhere' })
 }
 
 const { values } = parseArgs({ options: { fixture: { type: 'string' }, 'fetched-at': { type: 'string' } } })
